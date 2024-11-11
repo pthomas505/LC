@@ -31,7 +31,7 @@ open Term_
 
 
 /--
-  The string representation of formulas.
+  The string representation of terms.
 -/
 def Term_.toString : Term_ → String
   | var_ x => x
