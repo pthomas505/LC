@@ -24,3 +24,57 @@ Term_ → Term_
   if x = y
   then abs_ y P
   else abs_ y (replace_free x N P)
+
+
+lemma replace_free_self
+  (v : Symbol_)
+  (e : Term_) :
+  replace_free v (var_ v) e = e :=
+  by
+    induction e
+    case var_ x =>
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        rw [c1]
+      case neg c1 =>
+        rfl
+    case app_ P Q ih_1 ih_2 =>
+      unfold replace_free
+      rw [ih_1]
+      rw [ih_2]
+    case abs_ x P ih =>
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        rfl
+      case neg c1 =>
+        rw [ih]
+
+
+/-
+theorem fastReplaceFree_self
+  (F : Formula)
+  (v : VarName) :
+  fastReplaceFree v v F = F :=
+
+theorem not_free_in_fastReplaceFree_self
+  (F : Formula)
+  (v t : VarName)
+  (h1 : ¬ isFreeIn v F) :
+  fastReplaceFree v t F = F :=
+
+  theorem fastReplaceFree_inverse
+  (F : Formula)
+  (v t : VarName)
+  (h1 : ¬ occursIn t F) :
+  fastReplaceFree t v (fastReplaceFree v t F) = F :=
+
+  theorem not_isFreeIn_fastReplaceFree
+  (F : Formula)
+  (v t : VarName)
+  (h1 : ¬ v = t) :
+  ¬ isFreeIn v (fastReplaceFree v t F) :=
+
+
+-/

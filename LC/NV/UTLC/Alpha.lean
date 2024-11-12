@@ -173,7 +173,7 @@ lemma are_alpha_equiv_alt_replace_free_rename
         exact ih
 
 
-example
+lemma are_alpha_equiv_imp_are_alpha_equiv_alt
   (e e' : Term_)
   (h1 : are_alpha_equiv e e') :
   are_alpha_equiv_alt e e' :=
@@ -198,7 +198,7 @@ example
       apply are_alpha_equiv_alt_replace_free_rename; exact ih_1
 
 
-example
+lemma are_alpha_equiv_alt_imp_are_alpha_equiv
   (e e' : Term_)
   (h1 : are_alpha_equiv_alt e e') :
   are_alpha_equiv e e' :=
@@ -225,6 +225,15 @@ example
       exact are_alpha_equiv.symm M N ih_2
     case trans M N P _ _ ih_3 ih_4 =>
       exact are_alpha_equiv.trans M N P ih_3 ih_4
+
+
+lemma are_alpha_equiv_iff_are_alpha_equiv_alt
+  (e e' : Term_) :
+  are_alpha_equiv e e' ↔ are_alpha_equiv_alt e e' :=
+  by
+    constructor
+    · exact are_alpha_equiv_imp_are_alpha_equiv_alt e e'
+    · exact are_alpha_equiv_alt_imp_are_alpha_equiv e e'
 
 
 example

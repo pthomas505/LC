@@ -13,6 +13,8 @@ set_option autoImplicit false
 open Term_
 
 
+-- https://play.google.com/store/books/details/Morten_Heine_S%C3%B8rensen_Lectures_on_the_Curry_Howard?id=_mtnm-9KtbEC&hl=en
+
 -- is_sub M x N L means M [ x := N ] = L
 inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
 
@@ -81,6 +83,8 @@ inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
 -------------------------------------------------------------------------------
 
 
+-- https://faculty.iiit.ac.in/~venkatesh.choppella/popl/current-topics/lambda-calculus-1/index.html#org6f14feb
+
 -- is_sub_fresh M x N L means M [ x := N ] = L
 inductive is_sub_fresh : Term_ → Symbol_ → Term_ → Term_ → Prop
 
@@ -133,14 +137,16 @@ inductive is_sub_fresh : Term_ → Symbol_ → Term_ → Term_ → Prop
   (P : Term_)
   (x : Symbol_)
   (N : Term_)
-  (y' : Symbol_)
+  (z : Symbol_)
   (P' : Term_) :
   ¬ x = y →
   y ∈ N.free_var_set →
-  y' ∉ P.var_set →
-  y' ∉ N.var_set →
-  is_sub_fresh (rename y y' P) x N P' →
-  is_sub_fresh (abs_ y P) x N (abs_ y' P')
+  z ∉ P.var_set →
+  z ∉ N.var_set →
+  ¬ z = x →
+  ¬ z = y →
+  is_sub_fresh (rename y z P) x N P' →
+  is_sub_fresh (abs_ y P) x N (abs_ z P')
 
 
 -------------------------------------------------------------------------------
@@ -187,3 +193,54 @@ inductive is_sub_alt : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 
 -------------------------------------------------------------------------------
+
+
+example
+  (y : Symbol_)
+  (P : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (P' : Term_)
+  (h1 : is_sub_alt P x N P')
+  (h2 : y ∉ N.free_var_set) :
+  is_sub_alt (abs_ y P) x N (abs_ y P') :=
+  by
+    induction h1
+    case var_same y_ x_ N_ ih =>
+      apply is_sub_alt.abs
+      · exact h2
+      · rw [replace_free_self]
+        apply are_alpha_equiv.refl
+      · rw [replace_free_self]
+        apply is_sub_alt.var_same
+        exact ih
+    case var_diff y_ x_ N_ ih =>
+      apply is_sub_alt.abs
+      · exact h2
+      · rw [replace_free_self]
+        apply are_alpha_equiv.refl
+      · rw [replace_free_self]
+        apply is_sub_alt.var_diff
+        exact ih
+    case app P_ Q_ x_ N_ P'_ Q'_ ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_alt.abs
+      · exact h2
+      · rw [replace_free_self]
+        apply are_alpha_equiv.abs
+        apply are_alpha_equiv.app
+        · exact are_alpha_equiv.refl P_
+        · exact are_alpha_equiv.refl Q_
+      · rw [replace_free_self]
+        apply is_sub_alt.app
+        · exact ih_1
+        · exact ih_2
+    case abs y_ P_ x_ N_ P'_ z_ ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_alt.abs
+      · exact h2
+      · rw [replace_free_self]
+        apply are_alpha_equiv.refl
+      · rw [replace_free_self]
+        apply is_sub_alt.abs
+        · exact ih_1
+        · exact ih_2
+        · exact ih_3
