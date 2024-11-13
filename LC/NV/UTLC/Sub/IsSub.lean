@@ -13,7 +13,7 @@ set_option autoImplicit false
 open Term_
 
 
--- https://play.google.com/store/books/details/Morten_Heine_S%C3%B8rensen_Lectures_on_the_Curry_Howard?id=_mtnm-9KtbEC&hl=en
+-- [1]
 
 -- is_sub M x N L means M [ x := N ] = L
 inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
@@ -152,6 +152,8 @@ inductive is_sub_fresh : Term_ → Symbol_ → Term_ → Term_ → Prop
 -------------------------------------------------------------------------------
 
 
+-- [2]
+
 inductive is_sub_alt : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 | var_same
@@ -187,7 +189,7 @@ inductive is_sub_alt : Term_ → Symbol_ → Term_ → Term_ → Prop
   (P' : Term_)
   (z : Symbol_) :
   z ∉ N.free_var_set →
-  are_alpha_equiv (abs_ z (replace_free y (var_ z) P)) (abs_ y P) →
+  are_alpha_equiv_alt (abs_ y P) (abs_ z (replace_free y (var_ z) P)) →
   is_sub_alt (replace_free y (var_ z) P) x N P' →
   is_sub_alt (abs_ y P) x N (abs_ z P')
 
@@ -205,42 +207,22 @@ example
   (h2 : y ∉ N.free_var_set) :
   is_sub_alt (abs_ y P) x N (abs_ y P') :=
   by
-    induction h1
-    case var_same y_ x_ N_ ih =>
-      apply is_sub_alt.abs
-      · exact h2
-      · rw [replace_free_self]
-        apply are_alpha_equiv.refl
-      · rw [replace_free_self]
-        apply is_sub_alt.var_same
-        exact ih
-    case var_diff y_ x_ N_ ih =>
-      apply is_sub_alt.abs
-      · exact h2
-      · rw [replace_free_self]
-        apply are_alpha_equiv.refl
-      · rw [replace_free_self]
-        apply is_sub_alt.var_diff
-        exact ih
-    case app P_ Q_ x_ N_ P'_ Q'_ ih_1 ih_2 ih_3 ih_4 =>
-      apply is_sub_alt.abs
-      · exact h2
-      · rw [replace_free_self]
-        apply are_alpha_equiv.abs
-        apply are_alpha_equiv.app
-        · exact are_alpha_equiv.refl P_
-        · exact are_alpha_equiv.refl Q_
-      · rw [replace_free_self]
-        apply is_sub_alt.app
-        · exact ih_1
-        · exact ih_2
-    case abs y_ P_ x_ N_ P'_ z_ ih_1 ih_2 ih_3 ih_4 =>
-      apply is_sub_alt.abs
-      · exact h2
-      · rw [replace_free_self]
-        apply are_alpha_equiv.refl
-      · rw [replace_free_self]
-        apply is_sub_alt.abs
-        · exact ih_1
-        · exact ih_2
-        · exact ih_3
+    apply is_sub_alt.abs
+    · exact h2
+    · rw [replace_free_self]
+      apply are_alpha_equiv_alt.refl
+    · rw [replace_free_self]
+      exact h1
+
+
+example
+  (y : Symbol_)
+  (P : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (P' : Term_)
+  (h1 : is_sub_alt P x N P')
+  (h2 : x ∉ P.free_var_set) :
+  is_sub_alt (abs_ y P) x N (abs_ y P') :=
+  by
+    sorry

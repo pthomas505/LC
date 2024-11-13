@@ -44,6 +44,11 @@ inductive are_alpha_equiv : Term_ → Term_ → Prop
   are_alpha_equiv (abs_ x M) (abs_ y (rename x y M))
 
 
+-------------------------------------------------------------------------------
+
+
+-- [2]
+
 inductive are_alpha_equiv_alt : Term_ → Term_ → Prop
 
 | rename
