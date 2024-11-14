@@ -40,17 +40,15 @@ inductive sub_is_def : Term_ → Symbol_ → Term_ → Prop
   x = y →
   sub_is_def (abs_ y P) x N
 
--- x ≠ y → x ∉ FV ( λ y . P ) → ( λ y . P ) [ x := N ] is defined
 | abs_diff_nel
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
   (N : Term_) :
   ¬ x = y →
-  x ∉ (abs_ y P).free_var_set →
+  x ∉ P.free_var_set →
   sub_is_def (abs_ y P) x N
 
--- x ≠ y → y ∉ FV ( N ) → P [ x := N ] is defined → ( λ y . P ) [ x := N ] is defined
 | abs_diff
   (y : Symbol_)
   (P : Term_)

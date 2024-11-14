@@ -56,8 +56,6 @@ inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
   x = y →
   is_sub (abs_ y P) x N (abs_ y P)
 
--- if x ≠ y then ( λ y . P ) [ x := N ] = ( λ y . P [ x := N ] )
-
 | abs_diff_nel
   (y : Symbol_)
   (P : Term_)

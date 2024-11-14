@@ -160,7 +160,10 @@ lemma lemma_1_2_5_i_a
   case abs_ y P _ =>
     by_cases h_xy : x = y
     · exact sub_is_def.abs_same y P x N h_xy
-    · exact sub_is_def.abs_diff_nel y P x N h_xy h1
+    · apply sub_is_def.abs_diff_nel y P x N h_xy
+      unfold free_var_set at h1
+      simp at h1
+      tauto
 
 
 lemma lemma_1_2_5_i_b
@@ -231,7 +234,9 @@ lemma lemma_1_2_5_i
     · apply is_sub.abs_same y P x N c1
     · apply is_sub.abs_diff_nel
       · exact c1
-      · exact h1
+      · unfold free_var_set at h1
+        simp at h1
+        tauto
       · apply ih
         unfold Term_.free_var_set at h1
         simp at h1
@@ -322,10 +327,15 @@ by
   case abs_diff_nel h1_y h1_P h1_x h1_N _ ih_2 =>
     have s1 : replace_free h1_x h1_N (abs_ h1_y h1_P) = abs_ h1_y h1_P :=
     by
-      apply lemma_1_2_5_i_b; exact ih_2
+      apply lemma_1_2_5_i_b;
+      unfold free_var_set
+      simp
+      tauto
     rw [s1]
     apply lemma_1_2_5_i
-    exact ih_2
+    unfold free_var_set
+    simp
+    tauto
   case abs_diff h1_y h1_P h1_x h1_N ih_1 ih_2 ih_3 ih_4 =>
     unfold replace_free
     split_ifs
