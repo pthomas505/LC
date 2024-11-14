@@ -92,50 +92,6 @@ example
         sorry
 
 
-example
-  (M : Term_)
-  (x : Symbol_)
-  (N : Term_)
-  (L : Term_)
-  (h1 : sub_single x N M = L) :
-  is_sub_fresh M x N L :=
-  by
-    rw [← h1]
-    clear h1
-    induction M
-    case var_ y =>
-      unfold sub_single
-      simp
-      unfold sub
-      unfold Function.updateITE
-      simp
-      split_ifs
-      case pos c1 =>
-        apply is_sub_fresh.var_same
-        rw [c1]
-      case neg c1 =>
-        apply is_sub_fresh.var_diff
-        intro contra
-        apply c1
-        rw [contra]
-    case app_ P Q ih_1 ih_2 =>
-      apply is_sub_fresh.app
-      · apply ih_1
-      · apply ih_2
-    case abs_ y P ih =>
-      unfold sub_single
-      simp
-      unfold sub
-      unfold Function.updateITE
-      simp
-      split_ifs
-      case pos c1 =>
-        obtain s1 := is_sub_fresh.abs_same
-        sorry
-      case neg c1 =>
-        sorry
-
-
 -------------------------------------------------------------------------------
 
 lemma lemma_1_2_5_i_a
