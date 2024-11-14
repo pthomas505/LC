@@ -16,8 +16,8 @@ open Term_
 -- [1]
 
 
--- is_sub_ M x N L means M [ x := N ] = L
-inductive is_sub_ : Term_ → Symbol_ → Term_ → Term_ → Prop
+-- is_sub M x N L means M [ x := N ] = L
+inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 -- if x = y then y [ x := N ] = N
 | var_same
@@ -25,7 +25,7 @@ inductive is_sub_ : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   x = y →
-  is_sub_ (var_ y) x N N
+  is_sub (var_ y) x N N
 
 -- if x ≠ y then y [ x := N ] = y
 | var_diff
@@ -33,7 +33,7 @@ inductive is_sub_ : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   ¬ x = y →
-  is_sub_ (var_ y) x N (var_ y)
+  is_sub (var_ y) x N (var_ y)
 
 -- (P Q) [ x := N ] = (P [ x := N ] Q [ x := N ])
 | app
@@ -43,9 +43,9 @@ inductive is_sub_ : Term_ → Symbol_ → Term_ → Term_ → Prop
   (N : Term_)
   (P' : Term_)
   (Q' : Term_) :
-  is_sub_ P x N P' →
-  is_sub_ Q x N Q' →
-  is_sub_ (app_ P Q) x N (app_ P' Q')
+  is_sub P x N P' →
+  is_sub Q x N Q' →
+  is_sub (app_ P Q) x N (app_ P' Q')
 
 -- if x = y then ( λ y . P ) [ x := N ] = ( λ y . P )
 | abs_same
@@ -54,7 +54,7 @@ inductive is_sub_ : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   x = y →
-  is_sub_ (abs_ y P) x N (abs_ y P)
+  is_sub (abs_ y P) x N (abs_ y P)
 
 -- if x ≠ y then ( λ y . P ) [ x := N ] = ( λ y . P [ x := N ] )
 
@@ -66,8 +66,8 @@ inductive is_sub_ : Term_ → Symbol_ → Term_ → Term_ → Prop
   (P' : Term_) :
   ¬ x = y →
   x ∉ P.free_var_set →
-  is_sub_ P x N P' →
-  is_sub_ (abs_ y P) x N (abs_ y P')
+  is_sub P x N P' →
+  is_sub (abs_ y P) x N (abs_ y P')
 
 | abs_diff
   (y : Symbol_)
@@ -77,8 +77,8 @@ inductive is_sub_ : Term_ → Symbol_ → Term_ → Term_ → Prop
   (P' : Term_) :
   ¬ x = y →
   y ∉ N.free_var_set →
-  is_sub_ P x N P' →
-  is_sub_ (abs_ y P) x N (abs_ y P')
+  is_sub P x N P' →
+  is_sub (abs_ y P) x N (abs_ y P')
 
 
 -------------------------------------------------------------------------------
