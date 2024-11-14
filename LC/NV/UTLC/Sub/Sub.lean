@@ -406,3 +406,98 @@ lemma lemma_1_2_6_b
 (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
 replace_free y L (replace_free x N M) =
   replace_free x (replace_free y L M) (replace_free y L N) := sorry
+
+
+-------------------------------------------------------------------------------
+
+
+example
+  (e1 e2 e3 : Term_)
+  (v : Symbol_)
+  (h1 : is_sub_v0 e1 v e2 e3) :
+  is_sub e1 v e2 e3 :=
+  by
+    induction h1
+    case abs_diff_nel y P x N ih_1 ih_2 =>
+      apply lemma_1_2_5_i
+      unfold free_var_set
+      simp
+      intro
+      contradiction
+    case abs_same y P x N ih_1 =>
+      apply is_sub.abs_same
+      exact ih_1
+    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub.abs_diff
+      · exact ih_1
+      · exact ih_2
+      · exact ih_4
+    all_goals
+      sorry
+
+
+theorem extracted_1
+  (e1 : Term_)
+  (v : Symbol_)
+  (e2 e3 : Term_)
+  (h1: v ∉ e1.free_var_set)
+  (h2 : is_sub_v0 e1 v e2 e3) :
+  e1 = e3 :=
+  by
+    induction h2
+    case var_same y x N ih =>
+      unfold free_var_set at h1
+      simp at h1
+      contradiction
+    case var_diff y x N ih =>
+      rfl
+    case app P Q x N P' Q' ih_1 ih_2 ih_3 ih_4 =>
+      unfold free_var_set at h1
+      simp at h1
+      obtain ⟨h1_left, h1_right⟩ := h1
+      specialize ih_3 h1_left
+      specialize ih_4 h1_right
+      rw [ih_3]
+      rw [ih_4]
+    case abs_same y P x N ih_1 =>
+      rfl
+    case abs_diff_nel y P x N ih_1 ih_2 =>
+      rfl
+    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      unfold free_var_set at h1
+      simp at h1
+      have s1 : P = P' := by tauto
+      rw [s1]
+
+
+example
+  (e1 e2 e3 : Term_)
+  (v : Symbol_)
+  (h1 : is_sub e1 v e2 e3) :
+  is_sub_v0 e1 v e2 e3 :=
+  by
+    induction h1
+    case abs_diff_nel y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      have s1 : x ∉ (abs_ y P).free_var_set :=
+      by
+        unfold free_var_set
+        simp
+        intro contra
+        contradiction
+      have s2 : P = P' :=
+      by
+        apply extracted_1 P x N P' ih_2 ih_4
+      subst s2
+      apply is_sub_v0.abs_diff_nel
+      · exact ih_1
+      · exact ih_2
+    case abs_same y P x N ih =>
+      apply is_sub_v0.abs_same
+      exact ih
+    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v0.abs_diff
+      · exact ih_1
+      · exact ih_2
+      · exact ih_4
+    all_goals
+      sorry
