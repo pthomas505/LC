@@ -171,24 +171,24 @@ lemma lemma_1_2_5_i
   (x : Symbol_)
   (N : Term_)
   (h1 : x ∉ M.free_var_set) :
-  is_sub M x N M :=
+  is_sub_v2 M x N M :=
   by
   induction M
   case var_ y =>
     unfold Term_.free_var_set at h1
     simp at h1
-    exact is_sub.var_diff y x N h1
+    exact is_sub_v2.var_diff y x N h1
   case app_ P Q ih_P ih_Q =>
     unfold Term_.free_var_set at h1
     simp at h1
     obtain ⟨h1_left, h1_right⟩ := h1
     specialize ih_P h1_left
     specialize ih_Q h1_right
-    exact is_sub.app P Q x N P Q ih_P ih_Q
+    exact is_sub_v2.app P Q x N P Q ih_P ih_Q
   case abs_ y P ih =>
     by_cases c1 : x = y
-    · apply is_sub.abs_same y P x N c1
-    · apply is_sub.abs_diff_nel
+    · apply is_sub_v2.abs_same y P x N c1
+    · apply is_sub_v2.abs_diff_nel
       · exact c1
       · unfold free_var_set at h1
         simp at h1
@@ -206,7 +206,7 @@ example
   (x : Symbol_)
   (N : Term_)
   (L : Term_)
-  (h1 : is_sub M x N L) :
+  (h1 : is_sub_v2 M x N L) :
   replace_free x N M = L :=
   by
     induction h1
@@ -240,7 +240,7 @@ example
 (M : Term_)
 (x : Symbol_)
 (N : Term_)
-(h1 : ∃ (L : Term_), is_sub M x N L) :
+(h1 : ∃ (L : Term_), is_sub_v2 M x N L) :
 sub_is_def M x N :=
 by
   obtain ⟨L, h1⟩ := h1
@@ -264,22 +264,22 @@ example
 (x : Symbol_)
 (N : Term_)
 (h1 : sub_is_def M x N) :
-is_sub M x N (replace_free x N M) :=
+is_sub_v2 M x N (replace_free x N M) :=
 by
   induction h1
   case var h1_y h1_x h1_N =>
     unfold replace_free
     split_ifs
     case pos c1 =>
-      apply is_sub.var_same; exact c1
+      apply is_sub_v2.var_same; exact c1
     case neg c1 =>
-      apply is_sub.var_diff; exact c1
+      apply is_sub_v2.var_diff; exact c1
   case app h1_M h1_P h1_Q ih_1 _ _ ih_4 ih_5 =>
-    apply is_sub.app; exact ih_4; exact ih_5
+    apply is_sub_v2.app; exact ih_4; exact ih_5
   case abs_same h1_y h1_P h1_x ih_1 ih_2 =>
     unfold replace_free
     split_ifs
-    apply is_sub.abs_same; exact ih_2
+    apply is_sub_v2.abs_same; exact ih_2
   case abs_diff_nel h1_y h1_P h1_x h1_N _ ih_2 =>
     have s1 : replace_free h1_x h1_N (abs_ h1_y h1_P) = abs_ h1_y h1_P :=
     by
@@ -295,7 +295,7 @@ by
   case abs_diff h1_y h1_P h1_x h1_N ih_1 ih_2 ih_3 ih_4 =>
     unfold replace_free
     split_ifs
-    apply is_sub.abs_diff
+    apply is_sub_v2.abs_diff
     · exact ih_1
     · exact ih_2
     · exact ih_4
@@ -374,7 +374,7 @@ replace_free x (var_ x) M = M := sorry
 lemma lemma_1_2_5_iii
 {M : Term_}
 {x : Symbol_} :
-is_sub M x (var_ x) M := sorry
+is_sub_v2 M x (var_ x) M := sorry
 
 lemma lemma_1_2_6_a_left
 (M N L : Term_)
@@ -415,7 +415,7 @@ example
   (e1 e2 e3 : Term_)
   (v : Symbol_)
   (h1 : is_sub_v1 e1 v e2 e3) :
-  is_sub e1 v e2 e3 :=
+  is_sub_v2 e1 v e2 e3 :=
   by
     induction h1
     case abs_diff_nel y P x N ih_1 ih_2 =>
@@ -425,10 +425,10 @@ example
       intro
       contradiction
     case abs_same y P x N ih_1 =>
-      apply is_sub.abs_same
+      apply is_sub_v2.abs_same
       exact ih_1
     case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
-      apply is_sub.abs_diff
+      apply is_sub_v2.abs_diff
       · exact ih_1
       · exact ih_2
       · exact ih_4
@@ -473,7 +473,7 @@ theorem extracted_1
 example
   (e1 e2 e3 : Term_)
   (v : Symbol_)
-  (h1 : is_sub e1 v e2 e3) :
+  (h1 : is_sub_v2 e1 v e2 e3) :
   is_sub_v1 e1 v e2 e3 :=
   by
     induction h1

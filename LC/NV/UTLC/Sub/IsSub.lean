@@ -79,10 +79,10 @@ inductive is_sub_v1 : Term_ → Symbol_ → Term_ → Term_ → Prop
 -- [1]
 
 /--
-  is_sub M x N L := True if and only if L is the result of replacing each free occurrence of x in M by N and no free occurrence of a variable in N becomes a bound occurrence in L.
+  is_sub_v2 M x N L := True if and only if L is the result of replacing each free occurrence of x in M by N and no free occurrence of a variable in N becomes a bound occurrence in L.
   M [ x := N ] = L
 -/
-inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
+inductive is_sub_v2 : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 -- if x = y then y [ x := N ] = N
 | var_same
@@ -90,7 +90,7 @@ inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   x = y →
-  is_sub (var_ y) x N N
+  is_sub_v2 (var_ y) x N N
 
 -- if x ≠ y then y [ x := N ] = y
 | var_diff
@@ -98,7 +98,7 @@ inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   ¬ x = y →
-  is_sub (var_ y) x N (var_ y)
+  is_sub_v2 (var_ y) x N (var_ y)
 
 -- (P Q) [ x := N ] = (P [ x := N ] Q [ x := N ])
 | app
@@ -108,9 +108,9 @@ inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
   (N : Term_)
   (P' : Term_)
   (Q' : Term_) :
-  is_sub P x N P' →
-  is_sub Q x N Q' →
-  is_sub (app_ P Q) x N (app_ P' Q')
+  is_sub_v2 P x N P' →
+  is_sub_v2 Q x N Q' →
+  is_sub_v2 (app_ P Q) x N (app_ P' Q')
 
 -- if x = y then ( λ y . P ) [ x := N ] = ( λ y . P )
 | abs_same
@@ -119,7 +119,7 @@ inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   x = y →
-  is_sub (abs_ y P) x N (abs_ y P)
+  is_sub_v2 (abs_ y P) x N (abs_ y P)
 
 | abs_diff_nel
   (y : Symbol_)
@@ -129,8 +129,8 @@ inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
   (P' : Term_) :
   ¬ x = y →
   x ∉ P.free_var_set →
-  is_sub P x N P' →
-  is_sub (abs_ y P) x N (abs_ y P')
+  is_sub_v2 P x N P' →
+  is_sub_v2 (abs_ y P) x N (abs_ y P')
 
 | abs_diff
   (y : Symbol_)
@@ -140,8 +140,8 @@ inductive is_sub : Term_ → Symbol_ → Term_ → Term_ → Prop
   (P' : Term_) :
   ¬ x = y →
   y ∉ N.free_var_set →
-  is_sub P x N P' →
-  is_sub (abs_ y P) x N (abs_ y P')
+  is_sub_v2 P x N P' →
+  is_sub_v2 (abs_ y P) x N (abs_ y P')
 
 
 -------------------------------------------------------------------------------
