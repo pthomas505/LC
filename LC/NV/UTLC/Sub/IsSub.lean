@@ -149,21 +149,21 @@ inductive is_sub_v2 : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 -- [2]
 
-inductive is_sub_alt : Term_ → Symbol_ → Term_ → Term_ → Prop
+inductive is_sub_v3 : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 | var_same
   (y : Symbol_)
   (x : Symbol_)
   (N : Term_) :
   x = y →
-  is_sub_alt (var_ y) x N N
+  is_sub_v3 (var_ y) x N N
 
 | var_diff
   (y : Symbol_)
   (x : Symbol_)
   (N : Term_) :
   ¬ x = y →
-  is_sub_alt (var_ y) x N (var_ y)
+  is_sub_v3 (var_ y) x N (var_ y)
 
 | app
   (P : Term_)
@@ -172,9 +172,9 @@ inductive is_sub_alt : Term_ → Symbol_ → Term_ → Term_ → Prop
   (N : Term_)
   (P' : Term_)
   (Q' : Term_) :
-  is_sub_alt P x N P' →
-  is_sub_alt Q x N Q' →
-  is_sub_alt (app_ P Q) x N (app_ P' Q')
+  is_sub_v3 P x N P' →
+  is_sub_v3 Q x N Q' →
+  is_sub_v3 (app_ P Q) x N (app_ P' Q')
 
 | abs
   (y : Symbol_)
@@ -185,8 +185,8 @@ inductive is_sub_alt : Term_ → Symbol_ → Term_ → Term_ → Prop
   (z : Symbol_) :
   z ∉ N.free_var_set →
   are_alpha_equiv_v2 (abs_ y P) (abs_ z (replace_free y (var_ z) P)) →
-  is_sub_alt (replace_free y (var_ z) P) x N P' →
-  is_sub_alt (abs_ y P) x N (abs_ z P')
+  is_sub_v3 (replace_free y (var_ z) P) x N P' →
+  is_sub_v3 (abs_ y P) x N (abs_ z P')
 
 
 -------------------------------------------------------------------------------
