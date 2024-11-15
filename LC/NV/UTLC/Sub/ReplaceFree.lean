@@ -7,29 +7,32 @@ set_option autoImplicit false
 open Term_
 
 
--- replace_free x N M := M [ x := N ]
--- x -> N in M
+-- replace_free u e1 e2 := e2 [ u := e1 ]
+-- u -> e1 in e2
 def replace_free
-(x : Symbol_)
-(N : Term_) :
+(u : Symbol_)
+(e : Term_) :
 Term_ → Term_
-| (var_ y) =>
-  if x = y
-  then N
-  else var_ y
+| var_ x =>
+  if u = x
+  then e
+  else var_ x
 
-| (app_ P Q) => app_ (replace_free x N P) (replace_free x N Q)
+| app_ P Q => app_ (replace_free u e P) (replace_free u e Q)
 
-| (abs_ y P) =>
-  if x = y
-  then abs_ y P
-  else abs_ y (replace_free x N P)
+| abs_ x P =>
+  if u = x
+  then abs_ x P
+  else abs_ x (replace_free u e P)
+
+
+-------------------------------------------------------------------------------
 
 
 lemma replace_free_self
-  (v : Symbol_)
+  (u : Symbol_)
   (e : Term_) :
-  replace_free v (var_ v) e = e :=
+  replace_free u (var_ u) e = e :=
   by
     induction e
     case var_ x =>
