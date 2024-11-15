@@ -418,15 +418,15 @@ example
   is_sub_v2 e1 v e2 e3 :=
   by
     induction h1
+    case abs_same y P x N ih_1 =>
+      apply is_sub_v2.abs_same
+      exact ih_1
     case abs_diff_nel y P x N ih_1 ih_2 =>
       apply lemma_1_2_5_i
       unfold free_var_set
       simp
       intro
       contradiction
-    case abs_same y P x N ih_1 =>
-      apply is_sub_v2.abs_same
-      exact ih_1
     case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
       apply is_sub_v2.abs_diff
       · exact ih_1
@@ -477,6 +477,9 @@ example
   is_sub_v1 e1 v e2 e3 :=
   by
     induction h1
+    case abs_same y P x N ih =>
+      apply is_sub_v1.abs_same
+      exact ih
     case abs_diff_nel y P x N P' ih_1 ih_2 ih_3 ih_4 =>
       have s1 : x ∉ (abs_ y P).free_var_set :=
       by
@@ -491,9 +494,6 @@ example
       apply is_sub_v1.abs_diff_nel
       · exact ih_1
       · exact ih_2
-    case abs_same y P x N ih =>
-      apply is_sub_v1.abs_same
-      exact ih
     case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
       apply is_sub_v1.abs_diff
       · exact ih_1
