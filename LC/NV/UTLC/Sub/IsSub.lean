@@ -13,6 +13,59 @@ set_option autoImplicit false
 open Term_
 
 
+inductive is_sub_v0 : Term_ → Symbol_ → Term_ → Term_ → Prop
+
+-- if x = y then y [ x := N ] = N
+| var_same
+  (y : Symbol_)
+  (x : Symbol_)
+  (N : Term_) :
+  x = y →
+  is_sub_v0 (var_ y) x N N
+
+-- if x ≠ y then y [ x := N ] = y
+| var_diff
+  (y : Symbol_)
+  (x : Symbol_)
+  (N : Term_) :
+  ¬ x = y →
+  is_sub_v0 (var_ y) x N (var_ y)
+
+-- (P Q) [ x := N ] = (P [ x := N ] Q [ x := N ])
+| app
+  (P : Term_)
+  (Q : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (P' : Term_)
+  (Q' : Term_) :
+  is_sub_v0 P x N P' →
+  is_sub_v0 Q x N Q' →
+  is_sub_v0 (app_ P Q) x N (app_ P' Q')
+
+| abs_diff_nel
+  (y : Symbol_)
+  (P : Term_)
+  (x : Symbol_)
+  (N : Term_) :
+  x ∉ (abs_ y P).free_var_set →
+  is_sub_v0 (abs_ y P) x N (abs_ y P)
+
+| abs_diff
+  (y : Symbol_)
+  (P : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (P' : Term_) :
+  ¬ x = y →
+  y ∉ N.free_var_set →
+  is_sub_v0 P x N P' →
+  is_sub_v0 (abs_ y P) x N (abs_ y P')
+
+
+-------------------------------------------------------------------------------
+
+
 inductive is_sub_v1 : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 -- if x = y then y [ x := N ] = N
