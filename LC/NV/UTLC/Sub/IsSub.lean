@@ -13,7 +13,7 @@ set_option autoImplicit false
 open Term_
 
 
-inductive is_sub_v0 : Term_ → Symbol_ → Term_ → Term_ → Prop
+inductive is_sub_v1 : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 -- if x = y then y [ x := N ] = N
 | var_same
@@ -21,7 +21,7 @@ inductive is_sub_v0 : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   x = y →
-  is_sub_v0 (var_ y) x N N
+  is_sub_v1 (var_ y) x N N
 
 -- if x ≠ y then y [ x := N ] = y
 | var_diff
@@ -29,7 +29,7 @@ inductive is_sub_v0 : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   ¬ x = y →
-  is_sub_v0 (var_ y) x N (var_ y)
+  is_sub_v1 (var_ y) x N (var_ y)
 
 -- (P Q) [ x := N ] = (P [ x := N ] Q [ x := N ])
 | app
@@ -39,9 +39,9 @@ inductive is_sub_v0 : Term_ → Symbol_ → Term_ → Term_ → Prop
   (N : Term_)
   (P' : Term_)
   (Q' : Term_) :
-  is_sub_v0 P x N P' →
-  is_sub_v0 Q x N Q' →
-  is_sub_v0 (app_ P Q) x N (app_ P' Q')
+  is_sub_v1 P x N P' →
+  is_sub_v1 Q x N Q' →
+  is_sub_v1 (app_ P Q) x N (app_ P' Q')
 
 | abs_diff_nel
   (y : Symbol_)
@@ -49,7 +49,7 @@ inductive is_sub_v0 : Term_ → Symbol_ → Term_ → Term_ → Prop
   (x : Symbol_)
   (N : Term_) :
   x ∉ (abs_ y P).free_var_set →
-  is_sub_v0 (abs_ y P) x N (abs_ y P)
+  is_sub_v1 (abs_ y P) x N (abs_ y P)
 
 | abs_diff
   (y : Symbol_)
@@ -59,8 +59,8 @@ inductive is_sub_v0 : Term_ → Symbol_ → Term_ → Term_ → Prop
   (P' : Term_) :
   ¬ x = y →
   y ∉ N.free_var_set →
-  is_sub_v0 P x N P' →
-  is_sub_v0 (abs_ y P) x N (abs_ y P')
+  is_sub_v1 P x N P' →
+  is_sub_v1 (abs_ y P) x N (abs_ y P')
 
 
 -------------------------------------------------------------------------------
