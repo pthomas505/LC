@@ -92,7 +92,7 @@ inductive are_alpha_equiv_v2 : Term_ → Term_ → Prop
 ------------------------------------------------------------------------------
 
 
-lemma are_alpha_equiv_v1_rename_replace_free
+lemma are_alpha_equiv_v1_replace_var_replace_free
   (u v : Symbol_)
   (e : Term_)
   (h1 : v ∉ e.var_set) :
@@ -136,7 +136,7 @@ lemma are_alpha_equiv_v1_rename_replace_free
         exact ih
 
 
-lemma are_alpha_equiv_v2_replace_free_rename
+lemma are_alpha_equiv_v2_replace_free_replace_var
   (u v : Symbol_)
   (e : Term_)
   (h1 : v ∉ e.var_set) :
@@ -203,7 +203,7 @@ lemma are_alpha_equiv_v1_imp_are_alpha_equiv_v2
       obtain s1 := are_alpha_equiv_v2.rename x y M ih_1
       apply are_alpha_equiv_v2.trans (abs_ x M) (abs_ y (replace_free x (var_ y) M)) (abs_ y (replace_var x y M)) s1
       apply are_alpha_equiv_v2.compat_abs y (replace_free x (var_ y) M) (replace_var x y M)
-      apply are_alpha_equiv_v2_replace_free_rename; exact ih_1
+      apply are_alpha_equiv_v2_replace_free_replace_var; exact ih_1
 
 
 lemma are_alpha_equiv_v2_imp_are_alpha_equiv_v1
@@ -232,7 +232,7 @@ lemma are_alpha_equiv_v2_imp_are_alpha_equiv_v1
       obtain s1 := are_alpha_equiv_v1.alpha x y M ih_1
       apply are_alpha_equiv_v1.trans _ _ _ s1
       apply are_alpha_equiv_v1.compat_abs
-      apply are_alpha_equiv_v1_rename_replace_free; exact ih_1
+      apply are_alpha_equiv_v1_replace_var_replace_free; exact ih_1
 
 
 lemma are_alpha_equiv_v1_iff_are_alpha_equiv_v2
