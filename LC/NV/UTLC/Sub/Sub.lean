@@ -414,6 +414,44 @@ replace_free y L (replace_free x N M) =
 example
   (e1 e2 e3 : Term_)
   (v : Symbol_)
+  (h1 : is_sub_v0 e1 v e2 e3) :
+  is_sub_v1 e1 v e2 e3 :=
+  by
+    induction h1
+    case var_same y x N ih =>
+      apply is_sub_v1.var_same
+      exact ih
+    case var_diff y x N ih =>
+      apply is_sub_v1.var_diff
+      exact ih
+    case app P Q x N P' Q' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v1.app
+      · exact ih_3
+      · exact ih_4
+    case abs_diff_nel y P x N ih =>
+      unfold free_var_set at ih
+      simp at ih
+      by_cases c1 : x = y
+      case pos =>
+        apply is_sub_v1.abs_same
+        exact c1
+      case neg =>
+        apply is_sub_v1.abs_diff_nel
+        · exact c1
+        · tauto
+    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v1.abs_diff
+      · exact ih_1
+      · exact ih_2
+      · exact ih_4
+
+
+-------------------------------------------------------------------------------
+
+
+example
+  (e1 e2 e3 : Term_)
+  (v : Symbol_)
   (h1 : is_sub_v1 e1 v e2 e3) :
   is_sub_v2 e1 v e2 e3 :=
   by
