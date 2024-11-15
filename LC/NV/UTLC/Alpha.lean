@@ -51,11 +51,20 @@ inductive are_alpha_equiv_v1 : Term_ → Term_ → Prop
 
 inductive are_alpha_equiv_v2 : Term_ → Term_ → Prop
 
-| rename
-  (x y : Symbol_)
+| refl
   (M : Term_) :
-  y ∉ M.var_set →
-  are_alpha_equiv_v2 (abs_ x M) (abs_ y (replace_free x (var_ y) M))
+  are_alpha_equiv_v2 M M
+
+| symm
+  (M N : Term_) :
+  are_alpha_equiv_v2 M N →
+  are_alpha_equiv_v2 N M
+
+| trans
+  (L M N : Term_) :
+  are_alpha_equiv_v2 L M →
+  are_alpha_equiv_v2 M N →
+  are_alpha_equiv_v2 L N
 
 | compat_app_left
   (M N L : Term_) :
@@ -73,20 +82,11 @@ inductive are_alpha_equiv_v2 : Term_ → Term_ → Prop
   are_alpha_equiv_v2 M N →
   are_alpha_equiv_v2 (abs_ x M) (abs_ x N)
 
-| refl
+| rename
+  (x y : Symbol_)
   (M : Term_) :
-  are_alpha_equiv_v2 M M
-
-| symm
-  (M N : Term_) :
-  are_alpha_equiv_v2 M N →
-  are_alpha_equiv_v2 N M
-
-| trans
-  (L M N : Term_) :
-  are_alpha_equiv_v2 L M →
-  are_alpha_equiv_v2 M N →
-  are_alpha_equiv_v2 L N
+  y ∉ M.var_set →
+  are_alpha_equiv_v2 (abs_ x M) (abs_ y (replace_free x (var_ y) M))
 
 
 ------------------------------------------------------------------------------
@@ -212,11 +212,12 @@ lemma are_alpha_equiv_v2_imp_are_alpha_equiv_v1
   are_alpha_equiv_v1 e e' :=
   by
     induction h1
-    case rename x y M ih_1 =>
-      obtain s1 := are_alpha_equiv_v1.alpha x y M ih_1
-      apply are_alpha_equiv_v1.trans _ _ _ s1
-      apply are_alpha_equiv_v1.abs
-      apply are_alpha_equiv_v1_rename_replace_free; exact ih_1
+    case refl M =>
+      exact are_alpha_equiv_v1.refl M
+    case symm M N _ ih_2 =>
+      exact are_alpha_equiv_v1.symm M N ih_2
+    case trans M N P _ _ ih_3 ih_4 =>
+      exact are_alpha_equiv_v1.trans M N P ih_3 ih_4
     case compat_app_left M N L _ ih_2 =>
       apply are_alpha_equiv_v1.app M N L L
       · exact ih_2
@@ -227,12 +228,11 @@ lemma are_alpha_equiv_v2_imp_are_alpha_equiv_v1
       · exact ih_2
     case compat_abs x M N _ ih_2 =>
       exact are_alpha_equiv_v1.abs x M N ih_2
-    case refl M =>
-      exact are_alpha_equiv_v1.refl M
-    case symm M N _ ih_2 =>
-      exact are_alpha_equiv_v1.symm M N ih_2
-    case trans M N P _ _ ih_3 ih_4 =>
-      exact are_alpha_equiv_v1.trans M N P ih_3 ih_4
+    case rename x y M ih_1 =>
+      obtain s1 := are_alpha_equiv_v1.alpha x y M ih_1
+      apply are_alpha_equiv_v1.trans _ _ _ s1
+      apply are_alpha_equiv_v1.abs
+      apply are_alpha_equiv_v1_rename_replace_free; exact ih_1
 
 
 lemma are_alpha_equiv_v1_iff_are_alpha_equiv_v2
