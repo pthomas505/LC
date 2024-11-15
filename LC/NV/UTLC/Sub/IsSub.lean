@@ -184,7 +184,7 @@ inductive is_sub_alt : Term_ → Symbol_ → Term_ → Term_ → Prop
   (P' : Term_)
   (z : Symbol_) :
   z ∉ N.free_var_set →
-  are_alpha_equiv_alt (abs_ y P) (abs_ z (replace_free y (var_ z) P)) →
+  are_alpha_equiv_v2 (abs_ y P) (abs_ z (replace_free y (var_ z) P)) →
   is_sub_alt (replace_free y (var_ z) P) x N P' →
   is_sub_alt (abs_ y P) x N (abs_ z P')
 
