@@ -8,10 +8,10 @@ open Term_
 
 
 /--
-  rename u v e := The simultaneous replacement of each occurrence of the variable `u` by the variable `v` in the term `e`.
+  replace_var u v e := The simultaneous replacement of each occurrence of the variable `u` by the variable `v` in the term `e`.
   (`u -> v` in `e`)
 -/
-def rename
+def replace_var
   (u v : Symbol_) :
   Term_ → Term_
   | var_ x =>
@@ -19,24 +19,24 @@ def rename
     then var_ v
     else var_ x
   | app_ M N =>
-    app_ (rename u v M) (rename u v N)
+    app_ (replace_var u v M) (replace_var u v N)
   | abs_ x M =>
     if u = x
-    then abs_ v (rename u v M)
-    else abs_ x (rename u v M)
+    then abs_ v (replace_var u v M)
+    else abs_ x (replace_var u v M)
 
 
 -------------------------------------------------------------------------------
 
 
-theorem rename_same
+theorem replace_var_same
   (u : Symbol_)
   (e : Term_) :
-  rename u u e = e :=
+  replace_var u u e = e :=
   by
     induction e
     all_goals
-      unfold rename
+      unfold replace_var
     case var_ x =>
       split_ifs
       case pos c1 =>
@@ -55,15 +55,15 @@ theorem rename_same
         rw [ih]
 
 
-theorem rename_diff
+theorem replace_var_diff
   (u v : Symbol_)
   (e : Term_)
   (h1 : ¬ u = v) :
-  ¬ occurs_in u (rename u v e) :=
+  ¬ occurs_in u (replace_var u v e) :=
   by
     induction e
     case var_ x =>
-      unfold rename
+      unfold replace_var
       split_ifs
       case pos c1 =>
         unfold occurs_in
@@ -72,12 +72,12 @@ theorem rename_diff
         unfold occurs_in
         exact c1
     case app_ M N ih_1 ih_2 =>
-      unfold rename
+      unfold replace_var
       unfold occurs_in
       simp
       exact ⟨ih_1, ih_2⟩
     case abs_ x M ih =>
-      unfold rename
+      unfold replace_var
       split_ifs
       case pos c1 =>
         unfold occurs_in
@@ -89,91 +89,91 @@ theorem rename_diff
         exact ⟨c1, ih⟩
 
 
-theorem rename_from_not_occurs_in
+theorem replace_var_from_not_occurs_in
   (u v : Symbol_)
   (e : Term_)
   (h1 : ¬ occurs_in u e) :
-  rename u v e = e :=
+  replace_var u v e = e :=
   by
     induction e
     all_goals
       unfold occurs_in at h1
     case var_ x =>
-      unfold rename
+      unfold replace_var
       split_ifs
       rfl
     case app_ M N ih_1 ih_2 =>
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
-      unfold rename
+      unfold replace_var
       rw [ih_1 h1_left]
       rw [ih_2 h1_right]
     case abs_ x M ih =>
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
-      unfold rename
+      unfold replace_var
       split_ifs
       rw [ih h1_right]
 
 
-theorem rename_to_not_occurs_in
+theorem replace_var_to_not_occurs_in
   (u v : Symbol_)
   (e : Term_)
   (h1 : ¬ occurs_in v e) :
-  rename v u (rename u v e) = e :=
+  replace_var v u (replace_var u v e) = e :=
   by
     induction e
     all_goals
       unfold occurs_in at h1
     case var_ x =>
-      simp only [rename]
+      simp only [replace_var]
       split_ifs
       case pos c1 =>
         rw [c1]
-        unfold rename
+        unfold replace_var
         simp
       case neg c1 =>
-        unfold rename
+        unfold replace_var
         split_ifs
         rfl
     case app_ M N ih_1 ih_2 =>
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
-      simp only [rename]
+      simp only [replace_var]
       rw [ih_1 h1_left]
       rw [ih_2 h1_right]
     case abs_ x M ih =>
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
-      simp only [rename]
+      simp only [replace_var]
       split_ifs
       case pos c1 =>
-        simp only [rename]
+        simp only [replace_var]
         simp
         exact ⟨c1, ih h1_right⟩
       case neg c1 =>
-        simp only [rename]
+        simp only [replace_var]
         split_ifs
         congr
         exact ih h1_right
 
 
-theorem rename_free_var_set_sdiff
+theorem replace_var_free_var_set_sdiff
   (u v : Symbol_)
   (e : Term_)
   (h1 : v ∉ e.var_set) :
-  e.free_var_set \ {u} = (rename u v e).free_var_set \ {v} :=
+  e.free_var_set \ {u} = (replace_var u v e).free_var_set \ {v} :=
   by
     induction e
     case var_ x =>
       unfold var_set at h1
       simp at h1
 
-      unfold rename
+      unfold replace_var
       split_ifs
       case pos c1 =>
         unfold free_var_set
@@ -201,7 +201,7 @@ theorem rename_free_var_set_sdiff
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
-      unfold rename
+      unfold replace_var
       unfold free_var_set
       simp only [Finset.union_sdiff_distrib]
       rw [ih_1 h1_left]
@@ -211,7 +211,7 @@ theorem rename_free_var_set_sdiff
       simp at h1
       obtain ⟨h1_left, _⟩ := h1
 
-      unfold rename
+      unfold replace_var
       split_ifs
       case pos c1 =>
         rw [← c1]

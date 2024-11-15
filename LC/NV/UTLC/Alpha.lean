@@ -41,7 +41,7 @@ inductive are_alpha_equiv_v1 : Term_ → Term_ → Prop
   (x y : Symbol_)
   (M : Term_) :
   y ∉ M.var_set →
-  are_alpha_equiv_v1 (abs_ x M) (abs_ y (rename x y M))
+  are_alpha_equiv_v1 (abs_ x M) (abs_ y (replace_var x y M))
 
 
 -------------------------------------------------------------------------------
@@ -96,13 +96,13 @@ lemma are_alpha_equiv_v1_rename_replace_free
   (u v : Symbol_)
   (e : Term_)
   (h1 : v ∉ e.var_set) :
-  are_alpha_equiv_v1 (rename u v e) (replace_free u (var_ v) e) :=
+  are_alpha_equiv_v1 (replace_var u v e) (replace_free u (var_ v) e) :=
   by
     induction e
     case var_ x =>
       unfold var_set at h1
       simp at h1
-      unfold rename
+      unfold replace_var
       unfold replace_free
       split_ifs
       all_goals
@@ -113,7 +113,7 @@ lemma are_alpha_equiv_v1_rename_replace_free
       obtain ⟨h1_left, h1_right⟩ := h1
       specialize ih_1 h1_left
       specialize ih_2 h1_right
-      unfold rename
+      unfold replace_var
       unfold replace_free
       apply are_alpha_equiv_v1.compat_app
       · exact ih_1
@@ -123,7 +123,7 @@ lemma are_alpha_equiv_v1_rename_replace_free
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
       specialize ih h1_left
-      unfold rename
+      unfold replace_var
       unfold replace_free
       split_ifs
       case pos c1 =>
@@ -140,13 +140,13 @@ lemma are_alpha_equiv_v2_replace_free_rename
   (u v : Symbol_)
   (e : Term_)
   (h1 : v ∉ e.var_set) :
-  are_alpha_equiv_v2 (replace_free u (var_ v) e) (rename u v e) :=
+  are_alpha_equiv_v2 (replace_free u (var_ v) e) (replace_var u v e) :=
   by
     induction e
     case var_ x =>
       unfold var_set at h1
       simp at h1
-      unfold rename
+      unfold replace_var
       unfold replace_free
       split_ifs
       all_goals
@@ -157,23 +157,23 @@ lemma are_alpha_equiv_v2_replace_free_rename
       obtain ⟨h1_left, h1_right⟩ := h1
       specialize ih_1 h1_left
       specialize ih_2 h1_right
-      unfold rename
+      unfold replace_var
       unfold replace_free
       obtain s1 := are_alpha_equiv_v2.compat_app_right _ _ _ ih_2
-      obtain s2 := are_alpha_equiv_v2.compat_app_left (replace_free u (var_ v) M) (rename u v M) (rename u v N) ih_1
+      obtain s2 := are_alpha_equiv_v2.compat_app_left (replace_free u (var_ v) M) (replace_var u v M) (replace_var u v N) ih_1
       apply are_alpha_equiv_v2.trans _ _ _ s1 s2
     case abs_ x M ih =>
       unfold var_set at h1
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
       specialize ih h1_left
-      unfold rename
+      unfold replace_var
       unfold replace_free
       split_ifs
       case pos c1 =>
         subst c1
         obtain s1 := are_alpha_equiv_v2.rename u v M h1_left
-        apply are_alpha_equiv_v2.trans (abs_ u M) (abs_ v (replace_free u (var_ v) M)) (abs_ v (rename u v M)) s1
+        apply are_alpha_equiv_v2.trans (abs_ u M) (abs_ v (replace_free u (var_ v) M)) (abs_ v (replace_var u v M)) s1
         apply are_alpha_equiv_v2.compat_abs
         exact ih
       case neg c1 =>
@@ -201,8 +201,8 @@ lemma are_alpha_equiv_v1_imp_are_alpha_equiv_v2
       exact are_alpha_equiv_v2.compat_abs x M M' ih_2
     case alpha x y M ih_1 =>
       obtain s1 := are_alpha_equiv_v2.rename x y M ih_1
-      apply are_alpha_equiv_v2.trans (abs_ x M) (abs_ y (replace_free x (var_ y) M)) (abs_ y (rename x y M)) s1
-      apply are_alpha_equiv_v2.compat_abs y (replace_free x (var_ y) M) (rename x y M)
+      apply are_alpha_equiv_v2.trans (abs_ x M) (abs_ y (replace_free x (var_ y) M)) (abs_ y (replace_var x y M)) s1
+      apply are_alpha_equiv_v2.compat_abs y (replace_free x (var_ y) M) (replace_var x y M)
       apply are_alpha_equiv_v2_replace_free_rename; exact ih_1
 
 
@@ -264,4 +264,4 @@ example
       congr
     case alpha x y M ih =>
       unfold Term_.free_var_set
-      exact rename_free_var_set_sdiff x y M ih
+      exact replace_var_free_var_set_sdiff x y M ih
