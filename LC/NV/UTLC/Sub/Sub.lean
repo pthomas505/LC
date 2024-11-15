@@ -418,6 +418,16 @@ example
   is_sub_v2 e1 v e2 e3 :=
   by
     induction h1
+    case var_same y x N ih =>
+      apply is_sub_v2.var_same
+      exact ih
+    case var_diff y x N ih =>
+      apply is_sub_v2.var_diff
+      exact ih
+    case app P Q x N P' Q' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v2.app
+      · exact ih_3
+      · exact ih_4
     case abs_same y P x N ih_1 =>
       apply is_sub_v2.abs_same
       exact ih_1
@@ -432,8 +442,6 @@ example
       · exact ih_1
       · exact ih_2
       · exact ih_4
-    all_goals
-      sorry
 
 
 theorem extracted_1
@@ -477,6 +485,16 @@ example
   is_sub_v1 e1 v e2 e3 :=
   by
     induction h1
+    case var_same y x N ih =>
+      apply is_sub_v1.var_same
+      exact ih
+    case var_diff y x N ih =>
+      apply is_sub_v1.var_diff
+      exact ih
+    case app P Q x N P' Q' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v1.app
+      · exact ih_3
+      · exact ih_4
     case abs_same y P x N ih =>
       apply is_sub_v1.abs_same
       exact ih
@@ -499,5 +517,3 @@ example
       · exact ih_1
       · exact ih_2
       · exact ih_4
-    all_goals
-      sorry
