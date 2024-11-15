@@ -2,7 +2,7 @@ import MathlibExtra.Fresh
 
 import LC.NV.UTLC.Sub.ReplaceFree
 import LC.NV.UTLC.Sub.ReplaceVar
-import LC.NV.UTLC.Alpha
+import LC.NV.UTLC.Sub.Alpha
 
 
 set_option autoImplicit false
