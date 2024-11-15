@@ -148,31 +148,31 @@ lemma not_is_free_in_replace_free
   (h1 : ¬ u = v) :
   ¬ is_free_in u (replace_free u (var_ v) M) :=
   by
-    sorry
-
-/-
-theorem fastReplaceFree_self
-  (F : Formula)
-  (v : VarName) :
-  fastReplaceFree v v F = F :=
-
-theorem not_free_in_fastReplaceFree_self
-  (F : Formula)
-  (v t : VarName)
-  (h1 : ¬ isFreeIn v F) :
-  fastReplaceFree v t F = F :=
-
-  theorem fastReplaceFree_inverse
-  (F : Formula)
-  (v t : VarName)
-  (h1 : ¬ occursIn t F) :
-  fastReplaceFree t v (fastReplaceFree v t F) = F :=
-
-  theorem not_isFreeIn_fastReplaceFree
-  (F : Formula)
-  (v t : VarName)
-  (h1 : ¬ v = t) :
-  ¬ isFreeIn v (fastReplaceFree v t F) :=
-
-
--/
+    induction M
+    case var_ x =>
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        unfold is_free_in
+        exact h1
+      case neg c1 =>
+        unfold is_free_in
+        exact c1
+    case app_ P Q ih_1 ih_2 =>
+      unfold replace_free
+      unfold is_free_in
+      simp
+      exact ⟨ih_1, ih_2⟩
+    case abs_ x P ih =>
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        unfold is_free_in
+        simp
+        intro contra
+        contradiction
+      case neg c1 =>
+        unfold is_free_in
+        simp
+        intro a1
+        exact ih
