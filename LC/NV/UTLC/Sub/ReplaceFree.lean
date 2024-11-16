@@ -57,9 +57,9 @@ lemma replace_free_self
 
 -- [1]
 lemma lemma_1_2_5_iii_b
-{M : Term_}
-{x : Symbol_} :
-replace_free x (var_ x) M = M := sorry
+  (v : Symbol_)
+  (e : Term_) :
+  replace_free v (var_ v) e = e := replace_free_self v e
 
 
 lemma not_free_in_replace_free_self
