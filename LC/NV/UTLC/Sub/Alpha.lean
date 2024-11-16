@@ -244,6 +244,9 @@ lemma are_alpha_equiv_v1_iff_are_alpha_equiv_v2
     · exact are_alpha_equiv_v2_imp_are_alpha_equiv_v1 e e'
 
 
+-------------------------------------------------------------------------------
+
+
 example
   (e e' : Term_)
   (h1 : are_alpha_equiv_v1 e e') :
