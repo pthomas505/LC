@@ -412,9 +412,38 @@ by
 
 -- [1]
 lemma lemma_1_2_5_iii
-{M : Term_}
-{x : Symbol_} :
-is_sub_v3 M x (var_ x) M := sorry
+  (e : Term_)
+  (v : Symbol_) :
+  is_sub_v3 e v (var_ v) e :=
+  by
+    induction e
+    case var_ x =>
+      by_cases c1 : v = x
+      case pos =>
+        rw [c1]
+        apply is_sub_v3.var_same
+        rfl
+      case neg =>
+        apply is_sub_v3.var_diff
+        exact c1
+    case app_ P Q ih_1 ih_2 =>
+      apply is_sub_v3.app
+      · exact ih_1
+      · exact ih_2
+    case abs_ x P ih =>
+      by_cases c1 : v = x
+      case pos =>
+        apply is_sub_v3.abs_same
+        exact c1
+      case neg =>
+        apply is_sub_v3.abs_diff
+        · exact c1
+        · unfold free_var_set
+          simp
+          intro contra
+          apply c1
+          rw [contra]
+        · exact ih
 
 
 -------------------------------------------------------------------------------
