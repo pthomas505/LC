@@ -55,6 +55,13 @@ lemma replace_free_self
         rw [ih]
 
 
+-- [1]
+lemma lemma_1_2_5_iii_b
+{M : Term_}
+{x : Symbol_} :
+replace_free x (var_ x) M = M := sorry
+
+
 lemma not_free_in_replace_free_self
   (u : Symbol_)
   (N : Term_)
@@ -88,6 +95,21 @@ lemma not_free_in_replace_free_self
         specialize h1 c1
         specialize ih h1
         rw [ih]
+
+
+-- [1]
+lemma lemma_1_2_5_i_b
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (h1 : x ∉ M.free_var_set) :
+  replace_free x N M = M :=
+  by
+    apply not_free_in_replace_free_self
+    intro contra
+    apply h1
+    rw [← is_free_in_iff_mem_free_var_set x M]
+    exact contra
 
 
 lemma replace_free_inverse
@@ -176,3 +198,35 @@ lemma not_is_free_in_replace_free
         simp
         intro a1
         exact ih
+
+
+lemma misc_5'
+(x : Symbol_)
+(y : Symbol_)
+(P : Term_)
+(N : Term_)
+(h1 : x ∉ P.free_var_set) :
+replace_free x N (abs_ y P) = abs_ y P :=
+by
+  apply lemma_1_2_5_i_b
+  unfold Term_.free_var_set
+  simp
+  intro a1
+  contradiction
+
+
+lemma misc_7'
+(x : Symbol_)
+(y : Symbol_)
+(P : Term_)
+(N : Term_)
+(h1 : x ∉ (abs_ y P).free_var_set)
+(h2 : ¬ x = y) :
+replace_free x N P = P :=
+by
+  unfold Term_.free_var_set at h1
+  simp at h1
+  apply lemma_1_2_5_i_b
+  intro contra
+  apply h2
+  exact h1 contra
