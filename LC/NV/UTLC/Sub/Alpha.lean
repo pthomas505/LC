@@ -37,7 +37,7 @@ inductive are_alpha_equiv_v1 : Term_ → Term_ → Prop
   are_alpha_equiv_v1 M M' →
   are_alpha_equiv_v1 (abs_ x M) (abs_ x M')
 
-| alpha
+| replace
   (x y : Symbol_)
   (M : Term_) :
   y ∉ M.var_set →
@@ -82,7 +82,7 @@ inductive are_alpha_equiv_v2 : Term_ → Term_ → Prop
   are_alpha_equiv_v2 M N →
   are_alpha_equiv_v2 (abs_ x M) (abs_ x N)
 
-| rename
+| replace
   (x y : Symbol_)
   (M : Term_) :
   y ∉ M.var_set →
@@ -128,7 +128,7 @@ lemma are_alpha_equiv_v1_replace_var_replace_free
       split_ifs
       case pos c1 =>
         subst c1
-        obtain s1 := are_alpha_equiv_v1.alpha u v M h1_left
+        obtain s1 := are_alpha_equiv_v1.replace u v M h1_left
         apply are_alpha_equiv_v1.symm
         exact s1
       case neg c1 =>
@@ -172,7 +172,7 @@ lemma are_alpha_equiv_v2_replace_free_replace_var
       split_ifs
       case pos c1 =>
         subst c1
-        obtain s1 := are_alpha_equiv_v2.rename u v M h1_left
+        obtain s1 := are_alpha_equiv_v2.replace u v M h1_left
         apply are_alpha_equiv_v2.trans (abs_ u M) (abs_ v (replace_free u (var_ v) M)) (abs_ v (replace_var u v M)) s1
         apply are_alpha_equiv_v2.compat_abs
         exact ih
@@ -199,8 +199,8 @@ lemma are_alpha_equiv_v1_imp_are_alpha_equiv_v2
       exact are_alpha_equiv_v2.trans (app_ M N) (app_ M' N) (app_ M' N') s1 s2
     case compat_abs x M M' _ ih_2 =>
       exact are_alpha_equiv_v2.compat_abs x M M' ih_2
-    case alpha x y M ih_1 =>
-      obtain s1 := are_alpha_equiv_v2.rename x y M ih_1
+    case replace x y M ih_1 =>
+      obtain s1 := are_alpha_equiv_v2.replace x y M ih_1
       apply are_alpha_equiv_v2.trans (abs_ x M) (abs_ y (replace_free x (var_ y) M)) (abs_ y (replace_var x y M)) s1
       apply are_alpha_equiv_v2.compat_abs y (replace_free x (var_ y) M) (replace_var x y M)
       apply are_alpha_equiv_v2_replace_free_replace_var; exact ih_1
@@ -228,8 +228,8 @@ lemma are_alpha_equiv_v2_imp_are_alpha_equiv_v1
       · exact ih_2
     case compat_abs x M N _ ih_2 =>
       exact are_alpha_equiv_v1.compat_abs x M N ih_2
-    case rename x y M ih_1 =>
-      obtain s1 := are_alpha_equiv_v1.alpha x y M ih_1
+    case replace x y M ih_1 =>
+      obtain s1 := are_alpha_equiv_v1.replace x y M ih_1
       apply are_alpha_equiv_v1.trans _ _ _ s1
       apply are_alpha_equiv_v1.compat_abs
       apply are_alpha_equiv_v1_replace_var_replace_free; exact ih_1
@@ -265,6 +265,6 @@ example
     case compat_abs x M M' ih_1 ih_2 =>
       unfold Term_.free_var_set
       congr
-    case alpha x y M ih =>
+    case replace x y M ih =>
       unfold Term_.free_var_set
       exact replace_var_free_var_set_sdiff x y M ih
