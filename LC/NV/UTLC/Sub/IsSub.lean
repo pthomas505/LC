@@ -42,7 +42,7 @@ inductive is_sub_v1 : Term_ → Symbol_ → Term_ → Term_ → Prop
   is_sub_v1 Q x N Q' →
   is_sub_v1 (app_ P Q) x N (app_ P' Q')
 
-| abs_diff_nel
+| abs_diff_1
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -50,7 +50,7 @@ inductive is_sub_v1 : Term_ → Symbol_ → Term_ → Term_ → Prop
   x ∉ (abs_ y P).free_var_set →
   is_sub_v1 (abs_ y P) x N (abs_ y P)
 
-| abs_diff
+| abs_diff_2
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -104,7 +104,7 @@ inductive is_sub_v2 : Term_ → Symbol_ → Term_ → Term_ → Prop
   x = y →
   is_sub_v2 (abs_ y P) x N (abs_ y P)
 
-| abs_diff_nel
+| abs_diff_1
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -113,7 +113,7 @@ inductive is_sub_v2 : Term_ → Symbol_ → Term_ → Term_ → Prop
   x ∉ P.free_var_set →
   is_sub_v2 (abs_ y P) x N (abs_ y P)
 
-| abs_diff
+| abs_diff_2
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -173,7 +173,7 @@ inductive is_sub_v3 : Term_ → Symbol_ → Term_ → Term_ → Prop
   x = y →
   is_sub_v3 (abs_ y P) x N (abs_ y P)
 
-| abs_diff_nel
+| abs_diff_1
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -184,7 +184,7 @@ inductive is_sub_v3 : Term_ → Symbol_ → Term_ → Term_ → Prop
   is_sub_v3 P x N P' →
   is_sub_v3 (abs_ y P) x N (abs_ y P')
 
-| abs_diff
+| abs_diff_2
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -236,7 +236,7 @@ inductive is_sub_v4 : Term_ → Symbol_ → Term_ → Term_ → Prop
   x = y →
   is_sub_v4 (abs_ y P) x N (abs_ y P)
 
-| abs_diff_nel
+| abs_diff_1
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -247,7 +247,7 @@ inductive is_sub_v4 : Term_ → Symbol_ → Term_ → Term_ → Prop
   is_sub_v4 P x N P' →
   is_sub_v4 (abs_ y P) x N (abs_ y P')
 
-| abs_diff
+| abs_diff_2
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -297,7 +297,7 @@ lemma lemma_1_2_5_i
   case abs_ y P ih =>
     by_cases c1 : x = y
     · apply is_sub_v3.abs_same y P x N c1
-    · apply is_sub_v3.abs_diff_nel
+    · apply is_sub_v3.abs_diff_1
       · exact c1
       · unfold free_var_set at h1
         simp at h1
@@ -335,11 +335,11 @@ example
       unfold replace_free
       split_ifs
       rfl
-    case abs_diff_nel y' P' x' N' P'' ih_1 ih_2 ih_3 ih_4 =>
+    case abs_diff_1 y' P' x' N' P'' ih_1 ih_2 ih_3 ih_4 =>
       unfold replace_free
       split_ifs
       rw [ih_4]
-    case abs_diff y' P' x' N' P'' ih_1 ih_2 ih_3 ih_4 =>
+    case abs_diff_2 y' P' x' N' P'' ih_1 ih_2 ih_3 ih_4 =>
       unfold replace_free
       split_ifs
       rw [ih_4]
@@ -362,10 +362,10 @@ by
     apply sub_is_def_v3.app; exact ih_3; exact ih_4
   case abs_same h1_y h1_P h1_x h1_N ih =>
     apply sub_is_def_v3.abs_same; exact ih
-  case abs_diff_nel h1_y h1_P h1_x h1_N _ ih_1 ih_2 _ _ =>
-    apply sub_is_def_v3.abs_diff_nel; exact ih_1; exact ih_2
-  case abs_diff h1_y h1_P h1_x h1_N _ ih_1 ih_2 _ ih_4 =>
-    apply sub_is_def_v3.abs_diff; exact ih_1; exact ih_2; exact ih_4
+  case abs_diff_1 h1_y h1_P h1_x h1_N _ ih_1 ih_2 _ _ =>
+    apply sub_is_def_v3.abs_diff_1; exact ih_1; exact ih_2
+  case abs_diff_2 h1_y h1_P h1_x h1_N _ ih_1 ih_2 _ ih_4 =>
+    apply sub_is_def_v3.abs_diff_2; exact ih_1; exact ih_2; exact ih_4
 
 
 example
@@ -389,7 +389,7 @@ by
     unfold replace_free
     split_ifs
     apply is_sub_v3.abs_same; exact ih_2
-  case abs_diff_nel h1_y h1_P h1_x h1_N _ ih_2 =>
+  case abs_diff_1 h1_y h1_P h1_x h1_N _ ih_2 =>
     have s1 : replace_free h1_x h1_N (abs_ h1_y h1_P) = abs_ h1_y h1_P :=
     by
       apply lemma_1_2_5_i_b;
@@ -401,10 +401,10 @@ by
     unfold free_var_set
     simp
     tauto
-  case abs_diff h1_y h1_P h1_x h1_N ih_1 ih_2 ih_3 ih_4 =>
+  case abs_diff_2 h1_y h1_P h1_x h1_N ih_1 ih_2 ih_3 ih_4 =>
     unfold replace_free
     split_ifs
-    apply is_sub_v3.abs_diff
+    apply is_sub_v3.abs_diff_2
     · exact ih_1
     · exact ih_2
     · exact ih_4
@@ -436,7 +436,7 @@ lemma lemma_1_2_5_iii
         apply is_sub_v3.abs_same
         exact c1
       case neg =>
-        apply is_sub_v3.abs_diff
+        apply is_sub_v3.abs_diff_2
         · exact c1
         · unfold free_var_set
           simp
@@ -466,7 +466,7 @@ lemma is_sub_v1_imp_is_sub_v2
       apply is_sub_v2.app
       · exact ih_3
       · exact ih_4
-    case abs_diff_nel y P x N ih =>
+    case abs_diff_1 y P x N ih =>
       unfold free_var_set at ih
       simp at ih
       by_cases c1 : x = y
@@ -474,11 +474,11 @@ lemma is_sub_v1_imp_is_sub_v2
         apply is_sub_v2.abs_same
         exact c1
       case neg =>
-        apply is_sub_v2.abs_diff_nel
+        apply is_sub_v2.abs_diff_1
         · exact c1
         · tauto
-    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
-      apply is_sub_v2.abs_diff
+    case abs_diff_2 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v2.abs_diff_2
       · exact ih_1
       · exact ih_2
       · exact ih_4
@@ -502,19 +502,19 @@ lemma is_sub_v2_imp_is_sub_v1
       · exact ih_3
       · exact ih_4
     case abs_same y P x N ih =>
-      apply is_sub_v1.abs_diff_nel
+      apply is_sub_v1.abs_diff_1
       unfold free_var_set
       simp
       intro a1
       exact ih
-    case abs_diff_nel y P x N ih_1 ih_2 =>
-      apply is_sub_v1.abs_diff_nel
+    case abs_diff_1 y P x N ih_1 ih_2 =>
+      apply is_sub_v1.abs_diff_1
       unfold free_var_set
       simp
       intro contra
       contradiction
-    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
-      apply is_sub_v1.abs_diff
+    case abs_diff_2 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v1.abs_diff_2
       · exact ih_1
       · exact ih_2
       · exact ih_4
@@ -553,14 +553,14 @@ lemma is_sub_v2_imp_is_sub_v3
     case abs_same y P x N ih_1 =>
       apply is_sub_v3.abs_same
       exact ih_1
-    case abs_diff_nel y P x N ih_1 ih_2 =>
+    case abs_diff_1 y P x N ih_1 ih_2 =>
       apply lemma_1_2_5_i
       unfold free_var_set
       simp
       intro
       contradiction
-    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
-      apply is_sub_v3.abs_diff
+    case abs_diff_2 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v3.abs_diff_2
       · exact ih_1
       · exact ih_2
       · exact ih_4
@@ -591,9 +591,9 @@ theorem extracted_1
       rw [ih_4]
     case abs_same y P x N ih_1 =>
       rfl
-    case abs_diff_nel y P x N ih_1 ih_2 =>
+    case abs_diff_1 y P x N ih_1 ih_2 =>
       rfl
-    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+    case abs_diff_2 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
       unfold free_var_set at h1
       simp at h1
       have s1 : P = P' := by tauto
@@ -620,7 +620,7 @@ lemma is_sub_v3_imp_is_sub_v2
     case abs_same y P x N ih =>
       apply is_sub_v2.abs_same
       exact ih
-    case abs_diff_nel y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+    case abs_diff_1 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
       have s1 : x ∉ (abs_ y P).free_var_set :=
       by
         unfold free_var_set
@@ -631,11 +631,11 @@ lemma is_sub_v3_imp_is_sub_v2
       by
         apply extracted_1 P x N P' ih_2 ih_4
       subst s2
-      apply is_sub_v2.abs_diff_nel
+      apply is_sub_v2.abs_diff_1
       · exact ih_1
       · exact ih_2
-    case abs_diff y P x N P' ih_1 ih_2 ih_3 ih_4 =>
-      apply is_sub_v2.abs_diff
+    case abs_diff_2 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+      apply is_sub_v2.abs_diff_2
       · exact ih_1
       · exact ih_2
       · exact ih_4

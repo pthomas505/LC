@@ -37,7 +37,7 @@ inductive sub_is_def_v3 : Term_ → Symbol_ → Term_ → Prop
   x = y →
   sub_is_def_v3 (abs_ y P) x N
 
-| abs_diff_nel
+| abs_diff_1
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -46,7 +46,7 @@ inductive sub_is_def_v3 : Term_ → Symbol_ → Term_ → Prop
   x ∉ P.free_var_set →
   sub_is_def_v3 (abs_ y P) x N
 
-| abs_diff
+| abs_diff_2
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -83,7 +83,7 @@ lemma lemma_1_2_5_i_a
   case abs_ y P _ =>
     by_cases h_xy : x = y
     · exact sub_is_def_v3.abs_same y P x N h_xy
-    · apply sub_is_def_v3.abs_diff_nel y P x N h_xy
+    · apply sub_is_def_v3.abs_diff_1 y P x N h_xy
       unfold free_var_set at h1
       simp at h1
       tauto
@@ -138,7 +138,7 @@ lemma lemma_1_2_5_ii_right
       simp
       rw [ih]
       tauto
-    case abs_diff_nel y P x N ih_1 ih_2 =>
+    case abs_diff_1 y P x N ih_1 ih_2 =>
       unfold replace_free at h2
       split_ifs at h2
       unfold free_var_set at h2
@@ -156,7 +156,7 @@ lemma lemma_1_2_5_ii_right
       · intro contra
         rw [← contra] at h2
         tauto
-    case abs_diff y P x N ih_1 ih_2 ih_3 ih_4 =>
+    case abs_diff_2 y P x N ih_1 ih_2 ih_3 ih_4 =>
       unfold replace_free at h2
       split_ifs at h2
       unfold free_var_set at h2
@@ -210,7 +210,7 @@ lemma lemma_1_2_5_iii_a
         apply sub_is_def_v3.abs_same
         rfl
       case neg =>
-        apply sub_is_def_v3.abs_diff
+        apply sub_is_def_v3.abs_diff_2
         · exact c1
         · unfold free_var_set
           simp
