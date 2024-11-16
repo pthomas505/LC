@@ -350,29 +350,29 @@ example
 (x : Symbol_)
 (N : Term_)
 (h1 : ∃ (L : Term_), is_sub_v3 M x N L) :
-sub_is_def M x N :=
+sub_is_def_v3 M x N :=
 by
   obtain ⟨L, h1⟩ := h1
   induction h1
   case var_same h1_y h1_x _ _ =>
-    apply sub_is_def.var
+    apply sub_is_def_v3.var
   case var_diff h1_y h1_x h1_N _ =>
-    apply sub_is_def.var
+    apply sub_is_def_v3.var
   case app h1_P h1_Q h1_x h1_N _ _ _ _ ih_3 ih_4 =>
-    apply sub_is_def.app; exact ih_3; exact ih_4
+    apply sub_is_def_v3.app; exact ih_3; exact ih_4
   case abs_same h1_y h1_P h1_x h1_N ih =>
-    apply sub_is_def.abs_same; exact ih
+    apply sub_is_def_v3.abs_same; exact ih
   case abs_diff_nel h1_y h1_P h1_x h1_N _ ih_1 ih_2 _ _ =>
-    apply sub_is_def.abs_diff_nel; exact ih_1; exact ih_2
+    apply sub_is_def_v3.abs_diff_nel; exact ih_1; exact ih_2
   case abs_diff h1_y h1_P h1_x h1_N _ ih_1 ih_2 _ ih_4 =>
-    apply sub_is_def.abs_diff; exact ih_1; exact ih_2; exact ih_4
+    apply sub_is_def_v3.abs_diff; exact ih_1; exact ih_2; exact ih_4
 
 
 example
 (M : Term_)
 (x : Symbol_)
 (N : Term_)
-(h1 : sub_is_def M x N) :
+(h1 : sub_is_def_v3 M x N) :
 is_sub_v3 M x N (replace_free x N M) :=
 by
   induction h1
