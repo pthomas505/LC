@@ -29,7 +29,7 @@ inductive sub_is_def_v3 : Term_ → Symbol_ → Term_ → Prop
   sub_is_def_v3 (app_ P Q) x N
 
 -- x = y → ( λ y . P ) [ x := N ] is defined
-| abs_same
+| abs_1
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -37,7 +37,7 @@ inductive sub_is_def_v3 : Term_ → Symbol_ → Term_ → Prop
   x = y →
   sub_is_def_v3 (abs_ y P) x N
 
-| abs_diff_1
+| abs_2
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -46,7 +46,7 @@ inductive sub_is_def_v3 : Term_ → Symbol_ → Term_ → Prop
   x ∉ P.free_var_set →
   sub_is_def_v3 (abs_ y P) x N
 
-| abs_diff_2
+| abs_3
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -82,8 +82,8 @@ lemma lemma_1_2_5_i_a
 
   case abs_ y P _ =>
     by_cases h_xy : x = y
-    · exact sub_is_def_v3.abs_same y P x N h_xy
-    · apply sub_is_def_v3.abs_diff_1 y P x N h_xy
+    · exact sub_is_def_v3.abs_1 y P x N h_xy
+    · apply sub_is_def_v3.abs_2 y P x N h_xy
       unfold free_var_set at h1
       simp at h1
       tauto
@@ -127,7 +127,7 @@ lemma lemma_1_2_5_ii_right
         tauto
       case inr h2_right =>
         tauto
-    case abs_same y P x N ih =>
+    case abs_1 y P x N ih =>
       unfold replace_free at h2
       split_ifs at h2
       unfold free_var_set at h2
@@ -138,7 +138,7 @@ lemma lemma_1_2_5_ii_right
       simp
       rw [ih]
       tauto
-    case abs_diff_1 y P x N ih_1 ih_2 =>
+    case abs_2 y P x N ih_1 ih_2 =>
       unfold replace_free at h2
       split_ifs at h2
       unfold free_var_set at h2
@@ -156,7 +156,7 @@ lemma lemma_1_2_5_ii_right
       · intro contra
         rw [← contra] at h2
         tauto
-    case abs_diff_2 y P x N ih_1 ih_2 ih_3 ih_4 =>
+    case abs_3 y P x N ih_1 ih_2 ih_3 ih_4 =>
       unfold replace_free at h2
       split_ifs at h2
       unfold free_var_set at h2
@@ -207,10 +207,10 @@ lemma lemma_1_2_5_iii_a
       by_cases c1 : v = x
       case pos =>
         rw [c1]
-        apply sub_is_def_v3.abs_same
+        apply sub_is_def_v3.abs_1
         rfl
       case neg =>
-        apply sub_is_def_v3.abs_diff_2
+        apply sub_is_def_v3.abs_3
         · exact c1
         · unfold free_var_set
           simp

@@ -361,11 +361,11 @@ by
   case app h1_P h1_Q h1_x h1_N _ _ _ _ ih_3 ih_4 =>
     apply sub_is_def_v3.app; exact ih_3; exact ih_4
   case abs_same h1_y h1_P h1_x h1_N ih =>
-    apply sub_is_def_v3.abs_same; exact ih
+    apply sub_is_def_v3.abs_1; exact ih
   case abs_diff_1 h1_y h1_P h1_x h1_N _ ih_1 ih_2 _ _ =>
-    apply sub_is_def_v3.abs_diff_1; exact ih_1; exact ih_2
+    apply sub_is_def_v3.abs_2; exact ih_1; exact ih_2
   case abs_diff_2 h1_y h1_P h1_x h1_N _ ih_1 ih_2 _ ih_4 =>
-    apply sub_is_def_v3.abs_diff_2; exact ih_1; exact ih_2; exact ih_4
+    apply sub_is_def_v3.abs_3; exact ih_1; exact ih_2; exact ih_4
 
 
 example
@@ -385,11 +385,11 @@ by
       apply is_sub_v3.var_diff; exact c1
   case app h1_M h1_P h1_Q ih_1 _ _ ih_4 ih_5 =>
     apply is_sub_v3.app; exact ih_4; exact ih_5
-  case abs_same h1_y h1_P h1_x ih_1 ih_2 =>
+  case abs_1 h1_y h1_P h1_x ih_1 ih_2 =>
     unfold replace_free
     split_ifs
     apply is_sub_v3.abs_same; exact ih_2
-  case abs_diff_1 h1_y h1_P h1_x h1_N _ ih_2 =>
+  case abs_2 h1_y h1_P h1_x h1_N _ ih_2 =>
     have s1 : replace_free h1_x h1_N (abs_ h1_y h1_P) = abs_ h1_y h1_P :=
     by
       apply lemma_1_2_5_i_b;
@@ -401,7 +401,7 @@ by
     unfold free_var_set
     simp
     tauto
-  case abs_diff_2 h1_y h1_P h1_x h1_N ih_1 ih_2 ih_3 ih_4 =>
+  case abs_3 h1_y h1_P h1_x h1_N ih_1 ih_2 ih_3 ih_4 =>
     unfold replace_free
     split_ifs
     apply is_sub_v3.abs_diff_2
