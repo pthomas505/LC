@@ -228,7 +228,37 @@ inductive is_sub_v4 : Term_ → Symbol_ → Term_ → Term_ → Prop
   is_sub_v4 Q x N Q' →
   is_sub_v4 (app_ P Q) x N (app_ P' Q')
 
-| abs
+| abs_same
+  (y : Symbol_)
+  (P : Term_)
+  (x : Symbol_)
+  (N : Term_) :
+  x = y →
+  is_sub_v4 (abs_ y P) x N (abs_ y P)
+
+| abs_diff_nel
+  (y : Symbol_)
+  (P : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (P' : Term_) :
+  ¬ x = y →
+  x ∉ P.free_var_set →
+  is_sub_v4 P x N P' →
+  is_sub_v4 (abs_ y P) x N (abs_ y P')
+
+| abs_diff
+  (y : Symbol_)
+  (P : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (P' : Term_) :
+  ¬ x = y →
+  y ∉ N.free_var_set →
+  is_sub_v4 P x N P' →
+  is_sub_v4 (abs_ y P) x N (abs_ y P')
+
+| alpha
   (y : Symbol_)
   (P : Term_)
   (x : Symbol_)
@@ -561,7 +591,7 @@ replace_free y L (replace_free x N M) =
 -------------------------------------------------------------------------------
 
 
-example
+lemma is_sub_v1_imp_is_sub_v2
   (e1 e2 e3 : Term_)
   (v : Symbol_)
   (h1 : is_sub_v1 e1 v e2 e3) :
@@ -596,7 +626,7 @@ example
       · exact ih_4
 
 
-example
+lemma is_sub_v2_imp_is_sub_v1
   (e1 e2 e3 : Term_)
   (v : Symbol_)
   (h1 : is_sub_v2 e1 v e2 e3) :
@@ -632,10 +662,20 @@ example
       · exact ih_4
 
 
+lemma is_sub_v1_iff_is_sub_v2
+  (e1 e2 e3 : Term_)
+  (v : Symbol_) :
+  is_sub_v1 e1 v e2 e3 ↔ is_sub_v2 e1 v e2 e3 :=
+  by
+    constructor
+    · apply is_sub_v1_imp_is_sub_v2
+    · apply is_sub_v2_imp_is_sub_v1
+
+
 -------------------------------------------------------------------------------
 
 
-example
+lemma is_sub_v2_imp_is_sub_v3
   (e1 e2 e3 : Term_)
   (v : Symbol_)
   (h1 : is_sub_v2 e1 v e2 e3) :
@@ -702,7 +742,7 @@ theorem extracted_1
       rw [s1]
 
 
-example
+lemma is_sub_v3_imp_is_sub_v2
   (e1 e2 e3 : Term_)
   (v : Symbol_)
   (h1 : is_sub_v3 e1 v e2 e3) :
@@ -741,6 +781,16 @@ example
       · exact ih_1
       · exact ih_2
       · exact ih_4
+
+
+lemma is_sub_v2_iff_is_sub_v3
+  (e1 e2 e3 : Term_)
+  (v : Symbol_) :
+  is_sub_v2 e1 v e2 e3 ↔ is_sub_v3 e1 v e2 e3 :=
+  by
+    constructor
+    · apply is_sub_v2_imp_is_sub_v3
+    · apply is_sub_v3_imp_is_sub_v2
 
 
 -------------------------------------------------------------------------------
