@@ -125,9 +125,32 @@ sorry
 
 -- [1]
 lemma lemma_1_2_5_iii_a
-  (M : Term_)
-  (x : Symbol_) :
-  sub_is_def_v3 M x (var_ x) := sorry
+  (e : Term_)
+  (v : Symbol_) :
+  sub_is_def_v3 e v (var_ v) :=
+  by
+    induction e
+    case var_ x =>
+      apply sub_is_def_v3.var
+    case app_ P Q ih_1 ih_2 =>
+      apply sub_is_def_v3.app
+      · exact ih_1
+      · exact ih_2
+    case abs_ x P ih =>
+      by_cases c1 : v = x
+      case pos =>
+        rw [c1]
+        apply sub_is_def_v3.abs_same
+        rfl
+      case neg =>
+        apply sub_is_def_v3.abs_diff
+        · exact c1
+        · unfold free_var_set
+          simp
+          intro contra
+          apply c1
+          rw [contra]
+        · exact ih
 
 
 -- [1]
