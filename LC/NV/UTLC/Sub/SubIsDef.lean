@@ -91,13 +91,80 @@ lemma lemma_1_2_5_i_a
 
 -- [1]
 lemma lemma_1_2_5_ii_right
-  (M : Term_)
-  (x : Symbol_)
-  (N : Term_)
+  (e1 : Term_)
+  (v : Symbol_)
+  (e2 : Term_)
   (z : Symbol_)
-  (h1 : sub_is_def_v3 M x N)
-  (h2 : z ∈ (replace_free x N M).free_var_set) :
-  (z ∈ M.free_var_set ∧ x ≠ z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set) := sorry
+  (h1 : sub_is_def_v3 e1 v e2)
+  (h2 : z ∈ (replace_free v e2 e1).free_var_set) :
+  (z ∈ e1.free_var_set ∧ ¬ v = z) ∨ (z ∈ e2.free_var_set ∧ v ∈ e1.free_var_set) :=
+  by
+    induction h1
+    case var y x N =>
+      simp only [free_var_set]
+      simp
+
+      unfold replace_free at h2
+      split_ifs at h2
+      case pos c1 =>
+        right
+        exact ⟨h2, c1⟩
+      case neg c1 =>
+        unfold free_var_set at h2
+        simp at h2
+        left
+        rw [h2]
+        exact ⟨rfl, c1⟩
+    case app P Q x N ih_1 ih_2 ih_3 ih_4 =>
+      simp only [free_var_set]
+      simp
+
+      unfold replace_free at h2
+      simp only [free_var_set] at h2
+      simp at h2
+      cases h2
+      case inl h2_left =>
+        tauto
+      case inr h2_right =>
+        tauto
+    case abs_same y P x N ih =>
+      unfold replace_free at h2
+      split_ifs at h2
+      unfold free_var_set at h2
+      simp at h2
+
+      left
+      simp only [free_var_set]
+      simp
+      rw [ih]
+      tauto
+    case abs_diff_nel y P x N ih_1 ih_2 =>
+      unfold replace_free at h2
+      split_ifs at h2
+      unfold free_var_set at h2
+      simp at h2
+
+      left
+      simp only [free_var_set]
+      simp
+
+      have s1 : (replace_free x N P) = P := lemma_1_2_5_i_b P x N ih_2
+      rw [s1] at h2
+
+      constructor
+      · exact h2
+      · intro contra
+        rw [← contra] at h2
+        tauto
+    case abs_diff y P x N ih_1 ih_2 ih_3 ih_4 =>
+      unfold replace_free at h2
+      split_ifs at h2
+      unfold free_var_set at h2
+      simp at h2
+
+      simp only [free_var_set]
+      simp
+      tauto
 
 
 -- [1]
