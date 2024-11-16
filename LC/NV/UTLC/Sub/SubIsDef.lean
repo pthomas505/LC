@@ -91,77 +91,77 @@ lemma lemma_1_2_5_i_a
 
 -- [1]
 lemma lemma_1_2_5_ii_right
-(M : Term_)
-(x : Symbol_)
-(N : Term_)
-(z : Symbol_)
-(h1 : sub_is_def_v3 M x N)
-(h2 : z ∈ (replace_free x N M).free_var_set) :
-(z ∈ M.free_var_set ∧ x ≠ z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set) := sorry
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (z : Symbol_)
+  (h1 : sub_is_def_v3 M x N)
+  (h2 : z ∈ (replace_free x N M).free_var_set) :
+  (z ∈ M.free_var_set ∧ x ≠ z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set) := sorry
 
 
 -- [1]
 lemma lemma_1_2_5_ii_left
-(M : Term_)
-(x : Symbol_)
-(N : Term_)
-(z : Symbol_)
-(h1 : sub_is_def_v3 M x N)
-(h2 : (z ∈ M.free_var_set ∧ x ≠ z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set)) :
-z ∈ (replace_free x N M).free_var_set := sorry
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (z : Symbol_)
+  (h1 : sub_is_def_v3 M x N)
+  (h2 : (z ∈ M.free_var_set ∧ x ≠ z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set)) :
+  z ∈ (replace_free x N M).free_var_set := sorry
 
 
 -- [1]
 lemma lemma_1_2_5_ii
-{M : Term_}
-{x : Symbol_}
-{N : Term_}
-{z : Symbol_}
-(H1 : sub_is_def_v3 M x N) :
-z ∈ (replace_free x N M).free_var_set ↔
-  (z ∈ M.free_var_set ∧ x ≠ z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set) :=
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (z : Symbol_)
+  (H1 : sub_is_def_v3 M x N) :
+  z ∈ (replace_free x N M).free_var_set ↔
+    (z ∈ M.free_var_set ∧ x ≠ z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set) :=
 sorry
 
 
 -- [1]
 lemma lemma_1_2_5_iii_a
-{M : Term_}
-{x : Symbol_} :
-sub_is_def_v3 M x (var_ x) := sorry
+  (M : Term_)
+  (x : Symbol_) :
+  sub_is_def_v3 M x (var_ x) := sorry
 
 
 -- [1]
 lemma lemma_1_2_6_a_left
-(M N L : Term_)
-(x y : Symbol_)
-(h1 : sub_is_def_v3 M x N)
-(h2 : sub_is_def_v3 N y L)
-(h3 : sub_is_def_v3 (replace_free x N M) y L)
-(h4 : x ≠ y)
-(h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
-sub_is_def_v3 M y L := sorry
+  (M N L : Term_)
+  (x y : Symbol_)
+  (h1 : sub_is_def_v3 M x N)
+  (h2 : sub_is_def_v3 N y L)
+  (h3 : sub_is_def_v3 (replace_free x N M) y L)
+  (h4 : x ≠ y)
+  (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
+  sub_is_def_v3 M y L := sorry
 
 
 -- [1]
 lemma lemma_1_2_6_a_right
-(M N L : Term_)
-(x y : Symbol_)
-(h1 : sub_is_def_v3 M x N)
-(h2 : sub_is_def_v3 N y L)
-(h3 : sub_is_def_v3 (replace_free x N M) y L)
-(h4 : x ≠ y)
-(h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
-sub_is_def_v3 (replace_free y L M) x (replace_free y L N) := sorry
+  (M N L : Term_)
+  (x y : Symbol_)
+  (h1 : sub_is_def_v3 M x N)
+  (h2 : sub_is_def_v3 N y L)
+  (h3 : sub_is_def_v3 (replace_free x N M) y L)
+  (h4 : x ≠ y)
+  (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
+  sub_is_def_v3 (replace_free y L M) x (replace_free y L N) := sorry
 
 
 -- [1]
 lemma lemma_1_2_6_b
-(M N L : Term_)
-(x y : Symbol_)
-(h1 : sub_is_def_v3 M x N)
-(h2 : sub_is_def_v3 N y L)
-(h3 : sub_is_def_v3 (replace_free x N M) y L)
-(h4 : x ≠ y)
-(h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
-replace_free y L (replace_free x N M) =
-  replace_free x (replace_free y L M) (replace_free y L N) := sorry
+  (M N L : Term_)
+  (x y : Symbol_)
+  (h1 : sub_is_def_v3 M x N)
+  (h2 : sub_is_def_v3 N y L)
+  (h3 : sub_is_def_v3 (replace_free x N M) y L)
+  (h4 : x ≠ y)
+  (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
+  replace_free y L (replace_free x N M) =
+    replace_free x (replace_free y L M) (replace_free y L N) := sorry
