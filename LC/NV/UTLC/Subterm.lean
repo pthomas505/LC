@@ -16,8 +16,8 @@ open Term_
 def Term_.subterm_set :
   Term_ → Multiset Term_
   | var_ x => {var_ x}
-  | app_ M N => M.subterm_set ∪ N.subterm_set ∪ {app_ M N}
-  | abs_ x M => M.subterm_set ∪ {abs_ x M}
+  | app_ P Q => P.subterm_set ∪ Q.subterm_set ∪ {app_ P Q}
+  | abs_ x P => P.subterm_set ∪ {abs_ x P}
 
 
 -- reflexivity
@@ -30,9 +30,9 @@ lemma lemma_1_3_6_refl
       unfold subterm_set
     case var_ x =>
       simp
-    case app_ M N =>
+    case app_ P Q =>
       simp
-    case abs_ x M =>
+    case abs_ x P =>
       simp
 
 
