@@ -521,9 +521,11 @@ lemma is_sub_v2_imp_is_sub_v1
 
 
 lemma is_sub_v1_iff_is_sub_v2
-  (e1 e2 e3 : Term_)
-  (v : Symbol_) :
-  is_sub_v1 e1 v e2 e3 ↔ is_sub_v2 e1 v e2 e3 :=
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (L : Term_) :
+  is_sub_v1 M x N L ↔ is_sub_v2 M x N L :=
   by
     constructor
     · apply is_sub_v1_imp_is_sub_v2
