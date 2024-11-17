@@ -307,12 +307,12 @@ lemma lemma_1_2_5_i
 
 
 example
-  (M : Term_)
-  (x : Symbol_)
-  (N : Term_)
-  (L : Term_)
-  (h1 : is_sub_v3 M x N L) :
-  replace_free x N M = L :=
+  (e1 : Term_)
+  (v : Symbol_)
+  (e2 : Term_)
+  (e3 : Term_)
+  (h1 : is_sub_v3 e1 v e2 e3) :
+  replace_free v e2 e1 = e3 :=
   by
     induction h1
     case var_same y' x' N' ih =>
@@ -342,13 +342,13 @@ example
 
 
 example
-(M : Term_)
-(x : Symbol_)
-(N : Term_)
-(h1 : ∃ (L : Term_), is_sub_v3 M x N L) :
-sub_is_def_v3 M x N :=
+(e1 : Term_)
+(v : Symbol_)
+(e2 : Term_)
+(h1 : ∃ (e3 : Term_), is_sub_v3 e1 v e2 e3) :
+sub_is_def_v3 e1 v e2 :=
 by
-  obtain ⟨L, h1⟩ := h1
+  obtain ⟨e3, h1⟩ := h1
   induction h1
   case var_same h1_y h1_x _ _ =>
     apply sub_is_def_v3.var
@@ -365,11 +365,11 @@ by
 
 
 example
-(M : Term_)
-(x : Symbol_)
-(N : Term_)
-(h1 : sub_is_def_v3 M x N) :
-is_sub_v3 M x N (replace_free x N M) :=
+(e1 : Term_)
+(v : Symbol_)
+(e2 : Term_)
+(h1 : sub_is_def_v3 e1 v e2) :
+is_sub_v3 e1 v e2 (replace_free v e2 e1) :=
 by
   induction h1
   case var h1_y h1_x h1_N =>
