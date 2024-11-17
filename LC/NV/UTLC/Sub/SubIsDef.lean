@@ -168,13 +168,70 @@ lemma lemma_1_2_5_ii_right
 
 -- [1]
 lemma lemma_1_2_5_ii_left
-  (M : Term_)
-  (x : Symbol_)
-  (N : Term_)
+  (e1 : Term_)
+  (v : Symbol_)
+  (e2 : Term_)
   (z : Symbol_)
-  (h1 : sub_is_def_v3 M x N)
-  (h2 : (z ∈ M.free_var_set ∧ ¬ x = z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set)) :
-  z ∈ (replace_free x N M).free_var_set := sorry
+  (h1 : sub_is_def_v3 e1 v e2)
+  (h2 : (z ∈ e1.free_var_set ∧ ¬ v = z) ∨ (z ∈ e2.free_var_set ∧ v ∈ e1.free_var_set)) :
+  z ∈ (replace_free v e2 e1).free_var_set :=
+  by
+    induction h1
+    all_goals
+      simp only [free_var_set] at h2
+
+      unfold replace_free
+    case var y x N =>
+      simp at h2
+
+      split_ifs
+      case pos c1 =>
+        rw [c1] at h2
+        tauto
+      case neg c1 =>
+        unfold free_var_set
+        simp
+        tauto
+    case app P Q x N ih_1 ih_2 ih_3 ih_4 =>
+      simp at h2
+
+      unfold free_var_set
+      simp
+      tauto
+    case abs_1 y P x N ih =>
+      simp at h2
+
+      split_ifs
+      unfold free_var_set
+      simp
+      tauto
+    case abs_2 y P x N ih_1 ih_2 =>
+      simp at h2
+
+      split_ifs
+      unfold free_var_set
+      simp
+      have s1 : (replace_free x N P) = P := replace_free_not_mem x N P ih_2
+      rw [s1]
+      tauto
+    case abs_3 y P x N ih_1 ih_2 ih_3 ih_4 =>
+      simp at h2
+
+      split_ifs
+      unfold free_var_set
+      simp
+      cases h2
+      case inl c1 =>
+        tauto
+      case inr c1 =>
+        constructor
+        · apply ih_4
+          tauto
+        · obtain ⟨c1_left, c1_right⟩ := c1
+          intro contra
+          apply ih_2
+          rw [contra] at c1_left
+          exact c1_left
 
 
 -- [1]
