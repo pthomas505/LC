@@ -536,32 +536,34 @@ lemma is_sub_v1_iff_is_sub_v2
 
 
 lemma is_sub_v2_imp_is_sub_v3
-  (e1 e2 e3 : Term_)
-  (v : Symbol_)
-  (h1 : is_sub_v2 e1 v e2 e3) :
-  is_sub_v3 e1 v e2 e3 :=
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (L : Term_)
+  (h1 : is_sub_v2 M x N L) :
+  is_sub_v3 M x N L :=
   by
     induction h1
-    case var_same y x N ih =>
+    case var_same y_ x_ N_ ih =>
       apply is_sub_v3.var_same
       exact ih
-    case var_diff y x N ih =>
+    case var_diff y_ x_ N_ ih =>
       apply is_sub_v3.var_diff
       exact ih
-    case app P Q x N P' Q' ih_1 ih_2 ih_3 ih_4 =>
+    case app P_ Q_ x_ N_ P'_ Q'_ ih_1 ih_2 ih_3 ih_4 =>
       apply is_sub_v3.app
       · exact ih_3
       · exact ih_4
-    case abs_1 y P x N ih_1 =>
+    case abs_1 y_ P_ x_ N_ ih_1 =>
       apply is_sub_v3.abs_1
       exact ih_1
-    case abs_2 y P x N ih_1 ih_2 =>
+    case abs_2 y_ P_ x_ N_ ih_1 ih_2 =>
       apply lemma_1_2_5_i
       unfold free_var_set
       simp
       intro
       contradiction
-    case abs_3 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+    case abs_3 y_ P_ x_ N_ P'_ ih_1 ih_2 ih_3 ih_4 =>
       apply is_sub_v3.abs_3
       · exact ih_1
       · exact ih_2
@@ -569,21 +571,22 @@ lemma is_sub_v2_imp_is_sub_v3
 
 
 theorem extracted_1
-  (e1 : Term_)
-  (v : Symbol_)
-  (e2 e3 : Term_)
-  (h1: v ∉ e1.free_var_set)
-  (h2 : is_sub_v2 e1 v e2 e3) :
-  e1 = e3 :=
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (L : Term_)
+  (h1: x ∉ M.free_var_set)
+  (h2 : is_sub_v2 M x N L) :
+  M = L :=
   by
     induction h2
-    case var_same y x N ih =>
+    case var_same y_ x_ N_ ih =>
       unfold free_var_set at h1
       simp at h1
       contradiction
-    case var_diff y x N ih =>
+    case var_diff y_ x_ N_ ih =>
       rfl
-    case app P Q x N P' Q' ih_1 ih_2 ih_3 ih_4 =>
+    case app P_ Q_ x_ N_ P'_ Q'_ ih_1 ih_2 ih_3 ih_4 =>
       unfold free_var_set at h1
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
@@ -591,14 +594,14 @@ theorem extracted_1
       specialize ih_4 h1_right
       rw [ih_3]
       rw [ih_4]
-    case abs_1 y P x N ih_1 =>
+    case abs_1 y_ P_ x_ N_ ih_1 =>
       rfl
-    case abs_2 y P x N ih_1 ih_2 =>
+    case abs_2 y_ P_ x_ N_ ih_1 ih_2 =>
       rfl
-    case abs_3 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+    case abs_3 y_ P_ x_ N_ P'_ ih_1 ih_2 ih_3 ih_4 =>
       unfold free_var_set at h1
       simp at h1
-      have s1 : P = P' := by tauto
+      have s1 : P_ = P'_ := by tauto
       rw [s1]
 
 
