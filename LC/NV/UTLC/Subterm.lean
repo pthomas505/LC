@@ -44,12 +44,12 @@ lemma lemma_1_3_6_trans
   e ∈ e''.subterm_set :=
   by
     induction e''
-    case var_ x'' =>
+    case var_ x =>
       unfold subterm_set at h2
       simp at h2
       rw [h2] at h1
       exact h1
-    case app_ M'' N'' ih_1'' ih_2'' =>
+    case app_ P Q ih_1 ih_2 =>
       unfold subterm_set at h2
       simp at h2
 
@@ -61,17 +61,17 @@ lemma lemma_1_3_6_trans
           simp
           left
           left
-          exact ih_1'' h2
+          exact ih_1 h2
         case inr h2 =>
           unfold subterm_set
           simp
           left
           right
-          exact ih_2'' h2
+          exact ih_2 h2
       case inr h2 =>
         rw [h2] at h1
         exact h1
-    case abs_ x'' M'' ih'' =>
+    case abs_ x P ih =>
       unfold subterm_set at h2
       simp at h2
 
@@ -80,7 +80,7 @@ lemma lemma_1_3_6_trans
         unfold subterm_set
         simp
         left
-        exact ih'' h2
+        exact ih h2
       case inr h2 =>
         rw [h2] at h1
         exact h1
