@@ -446,26 +446,28 @@ lemma lemma_1_2_5_iii
 
 
 lemma is_sub_v1_imp_is_sub_v2
-  (e1 e2 e3 : Term_)
-  (v : Symbol_)
-  (h1 : is_sub_v1 e1 v e2 e3) :
-  is_sub_v2 e1 v e2 e3 :=
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (L : Term_)
+  (h1 : is_sub_v1 M x N L) :
+  is_sub_v2 M x N L :=
   by
     induction h1
-    case var_same y x N ih =>
+    case var_same y_ x_ N_ ih =>
       apply is_sub_v2.var_same
       exact ih
-    case var_diff y x N ih =>
+    case var_diff y_ x_ N_ ih =>
       apply is_sub_v2.var_diff
       exact ih
-    case app P Q x N P' Q' ih_1 ih_2 ih_3 ih_4 =>
+    case app P_ Q_ x_ N_ P'_ Q'_ ih_1 ih_2 ih_3 ih_4 =>
       apply is_sub_v2.app
       · exact ih_3
       · exact ih_4
-    case abs_1 y P x N ih =>
+    case abs_1 y_ P_ x_ N_ ih =>
       unfold free_var_set at ih
       simp at ih
-      by_cases c1 : x = y
+      by_cases c1 : x_ = y_
       case pos =>
         apply is_sub_v2.abs_1
         exact c1
@@ -473,7 +475,7 @@ lemma is_sub_v1_imp_is_sub_v2
         apply is_sub_v2.abs_2
         · exact c1
         · tauto
-    case abs_2 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+    case abs_2 y_ P_ x_ N_ P'_ ih_1 ih_2 ih_3 ih_4 =>
       apply is_sub_v2.abs_3
       · exact ih_1
       · exact ih_2
