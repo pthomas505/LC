@@ -278,32 +278,32 @@ lemma lemma_1_2_5_i
   (h1 : x ∉ M.free_var_set) :
   is_sub_v3 M x N M :=
   by
-  induction M
-  case var_ x_ =>
-    unfold Term_.free_var_set at h1
-    simp at h1
-    exact is_sub_v3.var_diff x_ x N h1
-  case app_ P_ Q_ ih_1 ih_2 =>
-    unfold Term_.free_var_set at h1
-    simp at h1
-    obtain ⟨h1_left, h1_right⟩ := h1
-    specialize ih_1 h1_left
-    specialize ih_2 h1_right
-    exact is_sub_v3.app P_ Q_ x N P_ Q_ ih_1 ih_2
-  case abs_ x_ P_ ih =>
-    by_cases c1 : x = x_
-    · apply is_sub_v3.abs_1 x_ P_ x N c1
-    · apply is_sub_v3.abs_2
-      · exact c1
-      · unfold free_var_set at h1
-        simp at h1
-        tauto
-      · apply ih
-        unfold Term_.free_var_set at h1
-        simp at h1
-        intro contra
-        apply c1
-        exact h1 contra
+    induction M
+    case var_ x_ =>
+      unfold Term_.free_var_set at h1
+      simp at h1
+      exact is_sub_v3.var_diff x_ x N h1
+    case app_ P_ Q_ ih_1 ih_2 =>
+      unfold Term_.free_var_set at h1
+      simp at h1
+      obtain ⟨h1_left, h1_right⟩ := h1
+      specialize ih_1 h1_left
+      specialize ih_2 h1_right
+      exact is_sub_v3.app P_ Q_ x N P_ Q_ ih_1 ih_2
+    case abs_ x_ P_ ih =>
+      by_cases c1 : x = x_
+      · apply is_sub_v3.abs_1 x_ P_ x N c1
+      · apply is_sub_v3.abs_2
+        · exact c1
+        · unfold free_var_set at h1
+          simp at h1
+          tauto
+        · apply ih
+          unfold Term_.free_var_set at h1
+          simp at h1
+          intro contra
+          apply c1
+          exact h1 contra
 
 
 example
@@ -342,68 +342,68 @@ example
 
 
 example
-(M : Term_)
-(x : Symbol_)
-(N : Term_)
-(h1 : ∃ (L : Term_), is_sub_v3 M x N L) :
-sub_is_def_v3 M x N :=
-by
-  obtain ⟨e3, h1⟩ := h1
-  induction h1
-  case var_same y_ x_ _ _ =>
-    apply sub_is_def_v3.var
-  case var_diff y_ x_ N_ _ =>
-    apply sub_is_def_v3.var
-  case app P_ Q_ x_ N_ _ _ _ _ ih_3 ih_4 =>
-    apply sub_is_def_v3.app; exact ih_3; exact ih_4
-  case abs_1 y_ P_ x_ N_ ih =>
-    apply sub_is_def_v3.abs_1; exact ih
-  case abs_2 y_ P_ x_ N_ _ ih_1 ih_2 _ _ =>
-    apply sub_is_def_v3.abs_2; exact ih_1; exact ih_2
-  case abs_3 y_ P_ x_ N_ _ ih_1 ih_2 _ ih_4 =>
-    apply sub_is_def_v3.abs_3; exact ih_1; exact ih_2; exact ih_4
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (h1 : ∃ (L : Term_), is_sub_v3 M x N L) :
+  sub_is_def_v3 M x N :=
+  by
+    obtain ⟨e3, h1⟩ := h1
+    induction h1
+    case var_same y_ x_ _ _ =>
+      apply sub_is_def_v3.var
+    case var_diff y_ x_ N_ _ =>
+      apply sub_is_def_v3.var
+    case app P_ Q_ x_ N_ _ _ _ _ ih_3 ih_4 =>
+      apply sub_is_def_v3.app; exact ih_3; exact ih_4
+    case abs_1 y_ P_ x_ N_ ih =>
+      apply sub_is_def_v3.abs_1; exact ih
+    case abs_2 y_ P_ x_ N_ _ ih_1 ih_2 _ _ =>
+      apply sub_is_def_v3.abs_2; exact ih_1; exact ih_2
+    case abs_3 y_ P_ x_ N_ _ ih_1 ih_2 _ ih_4 =>
+      apply sub_is_def_v3.abs_3; exact ih_1; exact ih_2; exact ih_4
 
 
 example
-(M : Term_)
-(x : Symbol_)
-(N : Term_)
-(h1 : sub_is_def_v3 M x N) :
-is_sub_v3 M x N (replace_free x N M) :=
-by
-  induction h1
-  case var y_ x_ N_ =>
-    unfold replace_free
-    split_ifs
-    case pos c1 =>
-      apply is_sub_v3.var_same; exact c1
-    case neg c1 =>
-      apply is_sub_v3.var_diff; exact c1
-  case app P_ Q_ x_ N_ ih_1 _ ih_3 ih_4 =>
-    apply is_sub_v3.app; exact ih_3; exact ih_4
-  case abs_1 y_ P_ x_ N_ ih_1 =>
-    unfold replace_free
-    split_ifs
-    apply is_sub_v3.abs_1; exact ih_1
-  case abs_2 y_ P_ x_ N_ ih_1 ih_2 =>
-    have s1 : replace_free x_ N_ (abs_ y_ P_) = abs_ y_ P_ :=
-    by
-      apply replace_free_not_mem
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (h1 : sub_is_def_v3 M x N) :
+  is_sub_v3 M x N (replace_free x N M) :=
+  by
+    induction h1
+    case var y_ x_ N_ =>
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        apply is_sub_v3.var_same; exact c1
+      case neg c1 =>
+        apply is_sub_v3.var_diff; exact c1
+    case app P_ Q_ x_ N_ ih_1 _ ih_3 ih_4 =>
+      apply is_sub_v3.app; exact ih_3; exact ih_4
+    case abs_1 y_ P_ x_ N_ ih_1 =>
+      unfold replace_free
+      split_ifs
+      apply is_sub_v3.abs_1; exact ih_1
+    case abs_2 y_ P_ x_ N_ ih_1 ih_2 =>
+      have s1 : replace_free x_ N_ (abs_ y_ P_) = abs_ y_ P_ :=
+      by
+        apply replace_free_not_mem
+        unfold free_var_set
+        simp
+        tauto
+      rw [s1]
+      apply lemma_1_2_5_i
       unfold free_var_set
       simp
       tauto
-    rw [s1]
-    apply lemma_1_2_5_i
-    unfold free_var_set
-    simp
-    tauto
-  case abs_3 y_ P_ x_ N_ ih_1 ih_2 ih_3 ih_4 =>
-    unfold replace_free
-    split_ifs
-    apply is_sub_v3.abs_3
-    · exact ih_1
-    · exact ih_2
-    · exact ih_4
+    case abs_3 y_ P_ x_ N_ ih_1 ih_2 ih_3 ih_4 =>
+      unfold replace_free
+      split_ifs
+      apply is_sub_v3.abs_3
+      · exact ih_1
+      · exact ih_2
+      · exact ih_4
 
 
 -- [1]
