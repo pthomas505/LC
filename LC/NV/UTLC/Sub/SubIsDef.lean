@@ -211,8 +211,10 @@ lemma lemma_1_2_5_ii_left
       split_ifs
       unfold free_var_set
       simp
-      have s1 : (replace_free x N P) = P := replace_free_not_mem x N P ih_2
+
+      have s1 : replace_free x N P = P := replace_free_not_mem x N P ih_2
       rw [s1]
+
       tauto
     case abs_3 y P x N ih_1 ih_2 ih_3 ih_4 =>
       simp at h2
@@ -236,14 +238,87 @@ lemma lemma_1_2_5_ii_left
 
 -- [1]
 lemma lemma_1_2_5_ii
-  (M : Term_)
-  (x : Symbol_)
-  (N : Term_)
+  (e1 : Term_)
+  (v : Symbol_)
+  (e2 : Term_)
   (z : Symbol_)
-  (H1 : sub_is_def_v3 M x N) :
-  z ∈ (replace_free x N M).free_var_set ↔
-    (z ∈ M.free_var_set ∧ ¬ x = z) ∨ (z ∈ N.free_var_set ∧ x ∈ M.free_var_set) :=
-sorry
+  (h1 : sub_is_def_v3 e1 v e2) :
+  z ∈ (replace_free v e2 e1).free_var_set ↔
+    (z ∈ e1.free_var_set ∧ ¬ v = z) ∨ (z ∈ e2.free_var_set ∧ v ∈ e1.free_var_set) :=
+  by
+    induction h1
+    case var y x N =>
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        simp only [free_var_set]
+        simp
+        rw [c1]
+        tauto
+      case neg c1 =>
+        simp only [free_var_set]
+        simp
+        constructor
+        · intro a1
+          rw [a1]
+          tauto
+        · intro a1
+          tauto
+    case app P Q x N ih_1 ih_2 ih_3 ih_4 =>
+      unfold replace_free
+      simp only [free_var_set]
+      simp
+      tauto
+    case abs_1 y P x N ih =>
+      unfold replace_free
+      split_ifs
+      simp only [free_var_set]
+      simp
+      rw [ih]
+      tauto
+    case abs_2 y P x N ih_1 ih_2 =>
+      unfold replace_free
+      split_ifs
+      simp only [free_var_set]
+      simp
+
+      have s1 : replace_free x N P = P := replace_free_not_mem x N P ih_2
+      rw [s1]
+
+      constructor
+      · intro a1
+        obtain ⟨a1_left, a1_right⟩ := a1
+
+        have s1 : ¬ x = z :=
+        by
+          intro contra
+          apply ih_2
+          rw [contra]
+          exact a1_left
+
+        tauto
+      · tauto
+    case abs_3 y P x N ih_1 ih_2 ih_3 ih_4 =>
+      unfold replace_free
+      split_ifs
+      simp only [free_var_set]
+      simp
+
+      constructor
+      · intro a1
+        tauto
+      · intro a1
+        cases a1
+        case _ c1 =>
+          tauto
+        case _ c2 =>
+          constructor
+          · rw [ih_4]
+            tauto
+          · intro contra
+            apply ih_2
+            rw [contra] at c2
+            tauto
 
 
 -- [1]
