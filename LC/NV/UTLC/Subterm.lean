@@ -11,7 +11,7 @@ open Term_
 
 /--
   `Term_.subterm_set e` := The set of all of the subterms of a term `e`.
-  Definition 1.3.5
+  [2] Definition 1.3.5
 -/
 def Term_.subterm_set :
   Term_ → Multiset Term_
@@ -20,7 +20,7 @@ def Term_.subterm_set :
   | abs_ x P => P.subterm_set ∪ {abs_ x P}
 
 
--- reflexivity
+-- [2] reflexivity
 lemma lemma_1_3_6_refl
   (e : Term_) :
   e ∈ e.subterm_set :=
@@ -36,7 +36,7 @@ lemma lemma_1_3_6_refl
       simp
 
 
--- transitivity
+-- [2] transitivity
 lemma lemma_1_3_6_trans
   (e e' e'' : Term_)
   (h1 : e ∈ e'.subterm_set)
@@ -87,7 +87,7 @@ lemma lemma_1_3_6_trans
 
 
 /--
-  Definition 1.3.8
+  [2] Definition 1.3.8
 -/
 def is_proper_subterm
   (e e' : Term_) :
