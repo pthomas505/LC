@@ -153,11 +153,11 @@ theorem occurs_in_iff_mem_var_set
     simp only [Term_.var_set]
   case var_ x =>
     simp
-  case app_ M N ih_1 ih_2 =>
+  case app_ P Q ih_1 ih_2 =>
     rw [ih_1]
     rw [ih_2]
     simp
-  case abs_ x M ih =>
+  case abs_ x P ih =>
     rw [ih]
     simp
     tauto
@@ -174,11 +174,11 @@ theorem is_bound_in_iff_mem_bound_var_set
     simp only [Term_.bound_var_set]
   case var_ x =>
     simp
-  case app_ M N ih_1 ih_2 =>
+  case app_ P Q ih_1 ih_2 =>
     rw [ih_1]
     rw [ih_2]
     simp
-  case abs_ x M ih =>
+  case abs_ x P ih =>
     rw [ih]
     simp
     tauto
@@ -195,11 +195,11 @@ theorem is_free_in_iff_mem_free_var_set
     simp only [Term_.free_var_set]
   case var_ x =>
     simp
-  case app_ M N ih_1 ih_2 =>
+  case app_ P Q ih_1 ih_2 =>
     rw [ih_1]
     rw [ih_2]
     simp
-  case abs_ x M ih =>
+  case abs_ x P ih =>
     rw [ih]
     simp
     tauto
