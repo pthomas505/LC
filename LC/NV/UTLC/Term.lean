@@ -35,8 +35,8 @@ open Term_
 -/
 def Term_.toString : Term_ → String
   | var_ x => x
-  | app_ M N => s! "({M.toString} {N.toString})"
-  | abs_ x M => s! "(fun {x}. {M.toString})"
+  | app_ P Q => s! "({P.toString} {Q.toString})"
+  | abs_ x P => s! "(fun {x}. {P.toString})"
 
 
 instance :
@@ -104,20 +104,20 @@ instance
 
 lemma is_app_iff_exists_app
   (e : Term_) :
-  e.is_app ↔∃ (M N : Term_), e = app_ M N :=
+  e.is_app ↔∃ (P Q : Term_), e = app_ P Q :=
   by
     constructor
     · intro a1
       cases e
-      case app_ M N =>
-        apply Exists.intro M
-        apply Exists.intro N
+      case app_ P Q =>
+        apply Exists.intro P
+        apply Exists.intro Q
         rfl
       all_goals
         unfold is_app at a1
         simp only at a1
     · intro a1
-      obtain ⟨M, N, a1⟩ := a1
+      obtain ⟨P, Q, a1⟩ := a1
       rw [a1]
       unfold is_app
       simp only
@@ -144,20 +144,20 @@ instance
 
 lemma is_abs_iff_exists_abs
   (e : Term_) :
-  e.is_abs ↔∃ (x : Symbol_) (M : Term_), e = abs_ x M :=
+  e.is_abs ↔∃ (x : Symbol_) (P : Term_), e = abs_ x P :=
   by
     constructor
     · intro a1
       cases e
-      case abs_ x M =>
+      case abs_ x P =>
         apply Exists.intro x
-        apply Exists.intro M
+        apply Exists.intro P
         rfl
       all_goals
         unfold is_abs at a1
         simp only at a1
     · intro a1
-      obtain ⟨M, N, a1⟩ := a1
+      obtain ⟨P, Q, a1⟩ := a1
       rw [a1]
       unfold is_abs
       simp only
