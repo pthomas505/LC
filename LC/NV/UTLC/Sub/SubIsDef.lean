@@ -61,28 +61,28 @@ inductive sub_is_def_v3 : Term_ → Symbol_ → Term_ → Prop
 
 -- [1]
 lemma lemma_1_2_5_i_a
-  (M : Term_)
-  (x : Symbol_)
-  (N : Term_)
-  (h1 : x ∉ M.free_var_set) :
-  sub_is_def_v3 M x N :=
+  (e1 : Term_)
+  (v : Symbol_)
+  (e2 : Term_)
+  (h1 : v ∉ e1.free_var_set) :
+  sub_is_def_v3 e1 v e2 :=
   by
-  induction M
-  case var_ y =>
-    exact sub_is_def_v3.var y x N
+  induction e1
+  case var_ x =>
+    exact sub_is_def_v3.var x v e2
 
-  case app_ P Q ih_P ih_Q =>
+  case app_ P Q ih_1 ih_2 =>
     unfold Term_.free_var_set at h1
     simp at h1
     obtain ⟨h1_left, h1_right⟩ := h1
-    specialize ih_P h1_left
-    specialize ih_Q h1_right
-    exact sub_is_def_v3.app P Q x N ih_P ih_Q
+    specialize ih_1 h1_left
+    specialize ih_2 h1_right
+    exact sub_is_def_v3.app P Q v e2 ih_1 ih_2
 
-  case abs_ y P _ =>
-    by_cases h_xy : x = y
-    · exact sub_is_def_v3.abs_1 y P x N h_xy
-    · apply sub_is_def_v3.abs_2 y P x N h_xy
+  case abs_ x P _ =>
+    by_cases c1 : v = x
+    · exact sub_is_def_v3.abs_1 x P v e2 c1
+    · apply sub_is_def_v3.abs_2 x P v e2 c1
       unfold free_var_set at h1
       simp at h1
       tauto
