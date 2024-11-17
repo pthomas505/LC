@@ -35,10 +35,10 @@ instance
   (e : Term_) :
   Decidable (occurs_in v e) :=
   by
-  induction e
-  all_goals
-    simp only [occurs_in]
-    infer_instance
+    induction e
+    all_goals
+      simp only [occurs_in]
+      infer_instance
 
 
 /--
@@ -67,10 +67,10 @@ instance
   (e : Term_) :
   Decidable (is_bound_in v e) :=
   by
-  induction e
-  all_goals
-    simp only [is_bound_in]
-    infer_instance
+    induction e
+    all_goals
+      simp only [is_bound_in]
+      infer_instance
 
 
 /--
@@ -99,10 +99,10 @@ instance
   (e : Term_) :
   Decidable (is_free_in v e) :=
   by
-  induction e
-  all_goals
-    simp only [is_free_in]
-    infer_instance
+    induction e
+    all_goals
+      simp only [is_free_in]
+      infer_instance
 
 
 /--
@@ -118,8 +118,8 @@ instance
   (e : Term_) :
   Decidable e.is_open :=
   by
-  simp only [is_open]
-  infer_instance
+    simp only [is_open]
+    infer_instance
 
 
 /--
@@ -135,8 +135,8 @@ instance
   (e : Term_) :
   Decidable e.is_closed :=
   by
-  simp only [is_closed]
-  infer_instance
+    simp only [is_closed]
+    infer_instance
 
 
 -------------------------------------------------------------------------------
@@ -147,20 +147,20 @@ theorem occurs_in_iff_mem_var_set
   (e : Term_) :
   occurs_in v e ↔ v ∈ e.var_set :=
   by
-  induction e
-  all_goals
-    simp only [occurs_in]
-    simp only [Term_.var_set]
-  case var_ x =>
-    simp
-  case app_ P Q ih_1 ih_2 =>
-    rw [ih_1]
-    rw [ih_2]
-    simp
-  case abs_ x P ih =>
-    rw [ih]
-    simp
-    tauto
+    induction e
+    all_goals
+      simp only [occurs_in]
+      simp only [Term_.var_set]
+    case var_ x =>
+      simp
+    case app_ P Q ih_1 ih_2 =>
+      rw [ih_1]
+      rw [ih_2]
+      simp
+    case abs_ x P ih =>
+      rw [ih]
+      simp
+      tauto
 
 
 theorem is_bound_in_iff_mem_bound_var_set
@@ -168,20 +168,20 @@ theorem is_bound_in_iff_mem_bound_var_set
   (e : Term_) :
   is_bound_in v e ↔ v ∈ e.bound_var_set :=
   by
-  induction e
-  all_goals
-    simp only [is_bound_in]
-    simp only [Term_.bound_var_set]
-  case var_ x =>
-    simp
-  case app_ P Q ih_1 ih_2 =>
-    rw [ih_1]
-    rw [ih_2]
-    simp
-  case abs_ x P ih =>
-    rw [ih]
-    simp
-    tauto
+    induction e
+    all_goals
+      simp only [is_bound_in]
+      simp only [Term_.bound_var_set]
+    case var_ x =>
+      simp
+    case app_ P Q ih_1 ih_2 =>
+      rw [ih_1]
+      rw [ih_2]
+      simp
+    case abs_ x P ih =>
+      rw [ih]
+      simp
+      tauto
 
 
 theorem is_free_in_iff_mem_free_var_set
@@ -189,20 +189,20 @@ theorem is_free_in_iff_mem_free_var_set
   (e : Term_) :
   is_free_in v e ↔ v ∈ e.free_var_set :=
   by
-  induction e
-  all_goals
-    simp only [is_free_in]
-    simp only [Term_.free_var_set]
-  case var_ x =>
-    simp
-  case app_ P Q ih_1 ih_2 =>
-    rw [ih_1]
-    rw [ih_2]
-    simp
-  case abs_ x P ih =>
-    rw [ih]
-    simp
-    tauto
+    induction e
+    all_goals
+      simp only [is_free_in]
+      simp only [Term_.free_var_set]
+    case var_ x =>
+      simp
+    case app_ P Q ih_1 ih_2 =>
+      rw [ih_1]
+      rw [ih_2]
+      simp
+    case abs_ x P ih =>
+      rw [ih]
+      simp
+      tauto
 
 
 theorem is_bound_in_imp_occurs_in
@@ -211,12 +211,12 @@ theorem is_bound_in_imp_occurs_in
   (h1 : is_bound_in v e) :
   occurs_in v e :=
   by
-  induction e
-  all_goals
-    simp only [is_bound_in] at h1
-  all_goals
-    simp only [occurs_in]
-    tauto
+    induction e
+    all_goals
+      simp only [is_bound_in] at h1
+    all_goals
+      simp only [occurs_in]
+      tauto
 
 
 theorem is_free_in_imp_occurs_in
@@ -225,12 +225,12 @@ theorem is_free_in_imp_occurs_in
   (h1 : is_free_in v e) :
   occurs_in v e :=
   by
-  induction e
-  all_goals
-    simp only [is_free_in] at h1
-  all_goals
-    simp only [occurs_in]
-    tauto
+    induction e
+    all_goals
+      simp only [is_free_in] at h1
+    all_goals
+      simp only [occurs_in]
+      tauto
 
 
 theorem mem_bound_var_set_imp_mem_var_set

@@ -20,9 +20,9 @@ deriving Inhabited, DecidableEq, Repr
   The type of terms.
 -/
 inductive Term_ : Type
-| var_ : Symbol_ → Term_
-| app_ : Term_ → Term_ → Term_
-| abs_ : Symbol_ → Term_ → Term_
+  | var_ : Symbol_ → Term_
+  | app_ : Term_ → Term_ → Term_
+  | abs_ : Symbol_ → Term_ → Term_
 deriving Inhabited, DecidableEq, Repr
 
 compile_inductive% Term_
