@@ -606,40 +606,42 @@ theorem extracted_1
 
 
 lemma is_sub_v3_imp_is_sub_v2
-  (e1 e2 e3 : Term_)
-  (v : Symbol_)
-  (h1 : is_sub_v3 e1 v e2 e3) :
-  is_sub_v2 e1 v e2 e3 :=
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (L : Term_)
+  (h1 : is_sub_v3 M x N L) :
+  is_sub_v2 M x N L :=
   by
     induction h1
-    case var_same y x N ih =>
+    case var_same y_ x_ N_ ih =>
       apply is_sub_v2.var_same
       exact ih
-    case var_diff y x N ih =>
+    case var_diff y_ x_ N_ ih =>
       apply is_sub_v2.var_diff
       exact ih
-    case app P Q x N P' Q' ih_1 ih_2 ih_3 ih_4 =>
+    case app P_ Q_ x_ N_ P'_ Q'_ ih_1 ih_2 ih_3 ih_4 =>
       apply is_sub_v2.app
       · exact ih_3
       · exact ih_4
-    case abs_1 y P x N ih =>
+    case abs_1 y_ P_ x_ N_ ih =>
       apply is_sub_v2.abs_1
       exact ih
-    case abs_2 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
-      have s1 : x ∉ (abs_ y P).free_var_set :=
+    case abs_2 y_ P_ x_ N_ P'_ ih_1 ih_2 ih_3 ih_4 =>
+      have s1 : x_ ∉ (abs_ y_ P_).free_var_set :=
       by
         unfold free_var_set
         simp
         intro contra
         contradiction
-      have s2 : P = P' :=
+      have s2 : P_ = P'_ :=
       by
-        apply extracted_1 P x N P' ih_2 ih_4
+        apply extracted_1 P_ x_ N_ P'_ ih_2 ih_4
       subst s2
       apply is_sub_v2.abs_2
       · exact ih_1
       · exact ih_2
-    case abs_3 y P x N P' ih_1 ih_2 ih_3 ih_4 =>
+    case abs_3 y_ P_ x_ N_ P'_ ih_1 ih_2 ih_3 ih_4 =>
       apply is_sub_v2.abs_3
       · exact ih_1
       · exact ih_2
@@ -647,9 +649,11 @@ lemma is_sub_v3_imp_is_sub_v2
 
 
 lemma is_sub_v2_iff_is_sub_v3
-  (e1 e2 e3 : Term_)
-  (v : Symbol_) :
-  is_sub_v2 e1 v e2 e3 ↔ is_sub_v3 e1 v e2 e3 :=
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (L : Term_) :
+  is_sub_v2 M x N L ↔ is_sub_v3 M x N L :=
   by
     constructor
     · apply is_sub_v2_imp_is_sub_v3
