@@ -272,27 +272,27 @@ inductive is_sub_v4 : Term_ → Symbol_ → Term_ → Term_ → Prop
 
 -- [1]
 lemma lemma_1_2_5_i
-  (M : Term_)
-  (x : Symbol_)
-  (N : Term_)
-  (h1 : x ∉ M.free_var_set) :
-  is_sub_v3 M x N M :=
+  (e1 : Term_)
+  (v : Symbol_)
+  (e2 : Term_)
+  (h1 : v ∉ e1.free_var_set) :
+  is_sub_v3 e1 v e2 e1 :=
   by
-  induction M
+  induction e1
   case var_ y =>
     unfold Term_.free_var_set at h1
     simp at h1
-    exact is_sub_v3.var_diff y x N h1
-  case app_ P Q ih_P ih_Q =>
+    exact is_sub_v3.var_diff y v e2 h1
+  case app_ P Q ih_1 ih_2 =>
     unfold Term_.free_var_set at h1
     simp at h1
     obtain ⟨h1_left, h1_right⟩ := h1
-    specialize ih_P h1_left
-    specialize ih_Q h1_right
-    exact is_sub_v3.app P Q x N P Q ih_P ih_Q
+    specialize ih_1 h1_left
+    specialize ih_2 h1_right
+    exact is_sub_v3.app P Q v e2 P Q ih_1 ih_2
   case abs_ y P ih =>
-    by_cases c1 : x = y
-    · apply is_sub_v3.abs_1 y P x N c1
+    by_cases c1 : v = y
+    · apply is_sub_v3.abs_1 y P v e2 c1
     · apply is_sub_v3.abs_2
       · exact c1
       · unfold free_var_set at h1
