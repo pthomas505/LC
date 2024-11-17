@@ -385,10 +385,10 @@ by
     unfold replace_free
     split_ifs
     apply is_sub_v3.abs_1; exact ih_2
-  case abs_2 h1_y h1_P h1_x h1_N _ ih_2 =>
+  case abs_2 h1_y h1_P h1_x h1_N ih_1 ih_2 =>
     have s1 : replace_free h1_x h1_N (abs_ h1_y h1_P) = abs_ h1_y h1_P :=
     by
-      apply lemma_1_2_5_i_b;
+      apply replace_free_not_mem
       unfold free_var_set
       simp
       tauto

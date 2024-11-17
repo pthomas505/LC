@@ -233,4 +233,70 @@ theorem is_free_in_imp_occurs_in
     tauto
 
 
+theorem mem_bound_var_set_imp_mem_var_set
+  (v : Symbol_)
+  (e : Term_)
+  (h1 : v ∈ e.bound_var_set) :
+  v ∈ e.var_set :=
+  by
+    induction e
+    all_goals
+      simp only [bound_var_set] at h1
+      simp only [var_set]
+    case var_ x =>
+      simp at h1
+    case app_ P Q ih_1 ih_2 =>
+      simp at h1
+      simp
+      tauto
+    case abs_ x P ih =>
+      simp at h1
+      simp
+      tauto
+
+
+theorem not_mem_var_set_imp_not_mem_bound_var_set
+  (v : Symbol_)
+  (e : Term_)
+  (h1 : v ∉ e.var_set) :
+  v ∉ e.bound_var_set :=
+  by
+    intro contra
+    apply h1
+    exact mem_bound_var_set_imp_mem_var_set v e contra
+
+
+theorem mem_free_var_set_imp_mem_var_set
+  (v : Symbol_)
+  (e : Term_)
+  (h1 : v ∈ e.free_var_set) :
+  v ∈ e.var_set :=
+  by
+    induction e
+    all_goals
+      simp only [free_var_set] at h1
+      simp only [var_set]
+    case var_ x =>
+      exact h1
+    case app_ P Q ih_1 ih_2 =>
+      simp at h1
+      simp
+      tauto
+    case abs_ x P ih =>
+      simp at h1
+      simp
+      tauto
+
+
+theorem not_mem_var_set_imp_not_mem_free_var_set
+  (v : Symbol_)
+  (e : Term_)
+  (h1 : v ∉ e.var_set) :
+  v ∉ e.free_var_set :=
+  by
+    intro contra
+    apply h1
+    exact mem_free_var_set_imp_mem_var_set v e contra
+
+
 #lint

@@ -147,7 +147,7 @@ lemma lemma_1_2_5_ii_right
       simp only [free_var_set]
       simp
 
-      have s1 : (replace_free x N P) = P := lemma_1_2_5_i_b P x N ih_2
+      have s1 : (replace_free x N P) = P := replace_free_not_mem x N P ih_2
       rw [s1] at h2
 
       constructor
