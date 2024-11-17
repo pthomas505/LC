@@ -35,10 +35,10 @@ def replace_free
 -- [1] lemma_1_2_5_iii_b
 lemma replace_free_id
   (u : Symbol_)
-  (M : Term_) :
-  replace_free u (var_ u) M = M :=
+  (e : Term_) :
+  replace_free u (var_ u) e = e :=
   by
-    induction M
+    induction e
     all_goals
       unfold replace_free
     case var_ x =>
@@ -61,12 +61,12 @@ lemma replace_free_id
 -- [1] lemma_1_2_5_i_b
 lemma replace_free_not_mem
   (u : Symbol_)
-  (N : Term_)
-  (M : Term_)
-  (h1 : u ∉ M.free_var_set) :
-  replace_free u N M = M :=
+  (e1 : Term_)
+  (e2 : Term_)
+  (h1 : u ∉ e2.free_var_set) :
+  replace_free u e1 e2 = e2 :=
   by
-    induction M
+    induction e2
     all_goals
       unfold free_var_set at h1
       unfold replace_free
@@ -95,11 +95,11 @@ lemma replace_free_not_mem
 
 lemma replace_free_inverse
   (u v : Symbol_)
-  (M : Term_)
-  (h1 : v ∉ M.var_set) :
-  replace_free v (var_ u) (replace_free u (var_ v) M) = M :=
+  (e : Term_)
+  (h1 : v ∉ e.var_set) :
+  replace_free v (var_ u) (replace_free u (var_ v) e) = e :=
   by
-    induction M
+    induction e
     all_goals
       unfold var_set at h1
       simp only [replace_free]
@@ -143,11 +143,11 @@ lemma replace_free_inverse
 
 lemma replace_free_not_mem_free_var_set
   (u v : Symbol_)
-  (M : Term_)
+  (e : Term_)
   (h1 : ¬ u = v) :
-  u ∉ (replace_free u (var_ v) M).free_var_set :=
+  u ∉ (replace_free u (var_ v) e).free_var_set :=
   by
-    induction M
+    induction e
     case var_ x =>
       unfold replace_free
       split_ifs

@@ -32,10 +32,10 @@ def replace_var
 
 theorem replace_var_id
   (u : Symbol_)
-  (M : Term_) :
-  replace_var u u M = M :=
+  (e : Term_) :
+  replace_var u u e = e :=
   by
-    induction M
+    induction e
     all_goals
       unfold replace_var
     case var_ x =>
@@ -58,11 +58,11 @@ theorem replace_var_id
 
 lemma replace_var_not_mem
   (u v : Symbol_)
-  (M : Term_)
-  (h1 : u ∉ M.var_set) :
-  replace_var u v M = M :=
+  (e : Term_)
+  (h1 : u ∉ e.var_set) :
+  replace_var u v e = e :=
   by
-    induction M
+    induction e
     all_goals
       unfold var_set at h1
       unfold replace_var
@@ -87,11 +87,11 @@ lemma replace_var_not_mem
 
 theorem replace_var_inverse
   (u v : Symbol_)
-  (M : Term_)
-  (h1 : v ∉ M.var_set) :
-  replace_var v u (replace_var u v M) = M :=
+  (e : Term_)
+  (h1 : v ∉ e.var_set) :
+  replace_var v u (replace_var u v e) = e :=
   by
-    induction M
+    induction e
     all_goals
       unfold var_set at h1
       simp only [replace_var]
@@ -130,11 +130,11 @@ theorem replace_var_inverse
 
 theorem replace_var_not_mem_var_set
   (u v : Symbol_)
-  (M : Term_)
+  (e : Term_)
   (h1 : ¬ u = v) :
-  u ∉ (replace_var u v M).var_set :=
+  u ∉ (replace_var u v e).var_set :=
   by
-    induction M
+    induction e
     case var_ x =>
       unfold replace_var
       split_ifs
@@ -166,11 +166,11 @@ theorem replace_var_not_mem_var_set
 
 theorem replace_var_free_var_set_sdiff
   (u v : Symbol_)
-  (M : Term_)
-  (h1 : v ∉ M.var_set) :
-  M.free_var_set \ {u} = (replace_var u v M).free_var_set \ {v} :=
+  (e : Term_)
+  (h1 : v ∉ e.var_set) :
+  e.free_var_set \ {u} = (replace_var u v e).free_var_set \ {v} :=
   by
-    induction M
+    induction e
     case var_ x =>
       unfold var_set at h1
       simp at h1
