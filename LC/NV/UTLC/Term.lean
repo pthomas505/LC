@@ -45,7 +45,7 @@ instance :
 
 
 /--
-  is_var e := True if and only if `e` is a term variable.
+  `is_var e` := True if and only if `e` is a term variable.
 -/
 def Term_.is_var :
   Term_ → Prop
@@ -84,7 +84,7 @@ lemma is_var_iff_exists_var
 
 
 /--
-  is_app e := True if and only if `e` is a term application.
+  `is_app e` := True if and only if `e` is a term application.
 -/
 def Term_.is_app :
   Term_ → Prop
@@ -124,7 +124,7 @@ lemma is_app_iff_exists_app
 
 
 /--
-  is_abs e := True if and only if `e` is a term abstraction.
+  `is_abs e` := True if and only if `e` is a term abstraction.
 -/
 def Term_.is_abs :
   Term_ → Prop
