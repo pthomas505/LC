@@ -7,7 +7,9 @@ set_option autoImplicit false
 open Term_
 
 
--- sub_is_def_v3 M x N means M [ x := N ] is defined
+/--
+  `sub_is_def_v3 M x N` := True if and only if `M [ x := N ]` is defined
+-/
 inductive sub_is_def_v3 : Term_ → Symbol_ → Term_ → Prop
 
 -- y [ x := N ] is defined
@@ -67,25 +69,25 @@ lemma lemma_1_2_5_i_a
   (h1 : x ∉ M.free_var_set) :
   sub_is_def_v3 M x N :=
   by
-  induction M
-  case var_ x_ =>
-    exact sub_is_def_v3.var x_ x N
+    induction M
+    case var_ x_ =>
+      exact sub_is_def_v3.var x_ x N
 
-  case app_ P_ Q_ ih_1 ih_2 =>
-    unfold Term_.free_var_set at h1
-    simp at h1
-    obtain ⟨h1_left, h1_right⟩ := h1
-    specialize ih_1 h1_left
-    specialize ih_2 h1_right
-    exact sub_is_def_v3.app P_ Q_ x N ih_1 ih_2
-
-  case abs_ x_ P_ _ =>
-    by_cases c1 : x = x_
-    · exact sub_is_def_v3.abs_1 x_ P_ x N c1
-    · apply sub_is_def_v3.abs_2 x_ P_ x N c1
-      unfold free_var_set at h1
+    case app_ P_ Q_ ih_1 ih_2 =>
+      unfold Term_.free_var_set at h1
       simp at h1
-      tauto
+      obtain ⟨h1_left, h1_right⟩ := h1
+      specialize ih_1 h1_left
+      specialize ih_2 h1_right
+      exact sub_is_def_v3.app P_ Q_ x N ih_1 ih_2
+
+    case abs_ x_ P_ _ =>
+      by_cases c1 : x = x_
+      · exact sub_is_def_v3.abs_1 x_ P_ x N c1
+      · apply sub_is_def_v3.abs_2 x_ P_ x N c1
+        unfold free_var_set at h1
+        simp at h1
+        tauto
 
 
 -- [1]
@@ -386,3 +388,6 @@ lemma lemma_1_2_6_b
   (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
   replace_free y L (replace_free x N M) =
     replace_free x (replace_free y L M) (replace_free y L N) := sorry
+
+
+#lint
