@@ -15,8 +15,8 @@ open Term_
 def Term_.var_set :
   Term_ → Finset Symbol_
   | var_ x => {x}
-  | app_ M N => M.var_set ∪ N.var_set
-  | abs_ x M => M.var_set ∪ {x}
+  | app_ P Q => P.var_set ∪ Q.var_set
+  | abs_ x P => P.var_set ∪ {x}
 
 
 /--
@@ -26,8 +26,8 @@ def occurs_in
   (v : Symbol_) :
   Term_ → Prop
   | var_ x => v = x
-  | app_ M N => occurs_in v M ∨ occurs_in v N
-  | abs_ x M => v = x ∨ occurs_in v M
+  | app_ P Q => occurs_in v P ∨ occurs_in v Q
+  | abs_ x P => v = x ∨ occurs_in v P
 
 
 instance
@@ -47,8 +47,8 @@ instance
 def Term_.bound_var_set :
   Term_ → Finset Symbol_
   | var_ _ => ∅
-  | app_ M N => M.bound_var_set ∪ N.bound_var_set
-  | abs_ x M => M.bound_var_set ∪ {x}
+  | app_ P Q => P.bound_var_set ∪ Q.bound_var_set
+  | abs_ x P => P.bound_var_set ∪ {x}
 
 
 /--
@@ -58,8 +58,8 @@ def is_bound_in
   (v : Symbol_) :
   Term_ → Prop
   | var_ _ => False
-  | app_ M N => is_bound_in v M ∨ is_bound_in v N
-  | abs_ x M => v = x ∨ is_bound_in v M
+  | app_ P Q => is_bound_in v P ∨ is_bound_in v Q
+  | abs_ x P => v = x ∨ is_bound_in v P
 
 
 instance
@@ -79,8 +79,8 @@ instance
 def Term_.free_var_set :
   Term_ → Finset Symbol_
   | var_ x => {x}
-  | app_ M N => M.free_var_set ∪ N.free_var_set
-  | abs_ x M => M.free_var_set \ {x}
+  | app_ P Q => P.free_var_set ∪ Q.free_var_set
+  | abs_ x P => P.free_var_set \ {x}
 
 
 /--
@@ -90,8 +90,8 @@ def is_free_in
   (v : Symbol_) :
   Term_ → Prop
   | var_ x => v = x
-  | app_ M N => is_free_in v M ∨ is_free_in v N
-  | abs_ x M => ¬ v = x ∧ is_free_in v M
+  | app_ P Q => is_free_in v P ∨ is_free_in v Q
+  | abs_ x P => ¬ v = x ∧ is_free_in v P
 
 
 instance
