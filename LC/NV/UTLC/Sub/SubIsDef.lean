@@ -149,7 +149,7 @@ lemma lemma_1_2_5_ii_right
       simp only [free_var_set]
       simp
 
-      have s1 : (replace_free x_ N_ P_) = P_ := replace_free_not_mem x_ N_ P_ ih_2
+      have s1 : (replace_free x_ N_ P_) = P_ := by apply replace_free_not_mem; exact ih_2
       rw [s1] at h2
 
       constructor
@@ -214,7 +214,7 @@ lemma lemma_1_2_5_ii_left
       unfold free_var_set
       simp
 
-      have s1 : replace_free x_ N_ P_ = P_ := replace_free_not_mem x_ N_ P_ ih_2
+      have s1 : replace_free x_ N_ P_ = P_ := by apply replace_free_not_mem; exact ih_2
       rw [s1]
 
       tauto
@@ -284,7 +284,7 @@ lemma lemma_1_2_5_ii
       simp only [free_var_set]
       simp
 
-      have s1 : replace_free x_ N_ P_ = P_ := replace_free_not_mem x_ N_ P_ ih_2
+      have s1 : replace_free x_ N_ P_ = P_ := by apply replace_free_not_mem; exact ih_2
       rw [s1]
 
       constructor
@@ -358,11 +358,61 @@ lemma lemma_1_2_6_a_left
   (M N L : Term_)
   (x y : Symbol_)
   (h1 : sub_is_def_v3 M x N)
-  (h2 : sub_is_def_v3 N y L)
-  (h3 : sub_is_def_v3 (replace_free x N M) y L)
-  (h4 : ¬ x = y)
-  (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
-  sub_is_def_v3 M y L := sorry
+  (h2 : sub_is_def_v3 (replace_free x N M) y L)
+  (h3 : ¬ x = y)
+  (h4 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
+  sub_is_def_v3 M y L :=
+  by
+    induction M
+    case var_ x_ =>
+      apply sub_is_def_v3.var
+    case app_ P_ Q_ ih_1 ih_2 =>
+      cases h1
+      case app h1_left h1_right =>
+        unfold replace_free at h2
+        cases h2
+        case app h3_left h3_right =>
+          simp only [free_var_set] at h4
+          simp at h4
+          apply sub_is_def_v3.app
+          · tauto
+          · tauto
+    case abs_ x_ P_ ih =>
+      cases h1
+      case abs_1 c1 =>
+        unfold replace_free at h2
+        split_ifs at h2
+        exact h2
+      case abs_2 c1 c2 =>
+        unfold replace_free at h2
+        split_ifs at h2
+
+        have s1 : replace_free x N P_ = P_ := by apply replace_free_not_mem; exact c2
+        rw [s1] at h2
+        exact h2
+      case abs_3 c1 c2 c3 =>
+        unfold replace_free at h2
+        split_ifs at h2
+
+        simp only [free_var_set] at h4
+        simp at h4
+
+        cases h2
+        case abs_1 c4 =>
+          apply sub_is_def_v3.abs_1
+          exact c4
+        case abs_2 c4 c5 =>
+          apply sub_is_def_v3.abs_2
+          · exact c4
+          · intro contra
+            apply c5
+            exact replace_free_mem_free_var_set P_ x N y contra h3
+        case abs_3 c4 c5 c6 =>
+          apply sub_is_def_v3.abs_3
+          · exact c4
+          · exact c5
+          · apply ih c3 c6
+            tauto
 
 
 -- [1]
