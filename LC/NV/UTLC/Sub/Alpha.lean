@@ -267,4 +267,4 @@ example
       congr
     case replace x y M ih =>
       unfold Term_.free_var_set
-      exact replace_var_free_var_set_sdiff x y M ih
+      apply replace_var_free_var_set_sdiff; exact ih

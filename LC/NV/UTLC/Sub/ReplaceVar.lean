@@ -31,23 +31,23 @@ def replace_var
 
 
 theorem replace_var_id
-  (u : Symbol_)
-  (e : Term_) :
-  replace_var u u e = e :=
+  (M : Term_)
+  (x : Symbol_) :
+  replace_var x x M = M :=
   by
-    induction e
+    induction M
     all_goals
       unfold replace_var
-    case var_ x =>
+    case var_ x_ =>
       split_ifs
       case pos c1 =>
         rw [c1]
       case neg c1 =>
         rfl
-    case app_ P Q ih_1 ih_2 =>
+    case app_ P_ Q_ ih_1 ih_2 =>
       rw [ih_1]
       rw [ih_2]
-    case abs_ x P ih =>
+    case abs_ x_ P_ ih =>
       split_ifs
       case pos c1 =>
         rw [ih]
@@ -57,27 +57,27 @@ theorem replace_var_id
 
 
 lemma replace_var_not_mem
-  (u v : Symbol_)
-  (e : Term_)
-  (h1 : u ∉ e.var_set) :
-  replace_var u v e = e :=
+  (M : Term_)
+  (x y : Symbol_)
+  (h1 : x ∉ M.var_set) :
+  replace_var x y M = M :=
   by
-    induction e
+    induction M
     all_goals
       unfold var_set at h1
       unfold replace_var
-    case var_ x =>
+    case var_ x_ =>
       simp at h1
 
       split_ifs
       rfl
-    case app_ P Q ih_1 ih_2 =>
+    case app_ P_ Q_ ih_1 ih_2 =>
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
       rw [ih_1 h1_left]
       rw [ih_2 h1_right]
-    case abs_ x P ih =>
+    case abs_ x_ P_ ih =>
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
@@ -85,17 +85,53 @@ lemma replace_var_not_mem
       rw [ih h1_left]
 
 
-theorem replace_var_inverse
-  (u v : Symbol_)
-  (e : Term_)
-  (h1 : v ∉ e.var_set) :
-  replace_var v u (replace_var u v e) = e :=
+theorem replace_var_not_mem_var_set
+  (M : Term_)
+  (x y : Symbol_)
+  (h1 : ¬ x = y) :
+  x ∉ (replace_var x y M).var_set :=
   by
-    induction e
+    induction M
+    case var_ x_ =>
+      unfold replace_var
+      split_ifs
+      case pos c1 =>
+        unfold var_set
+        simp
+        exact h1
+      case neg c1 =>
+        unfold var_set
+        simp
+        exact c1
+    case app_ P_ Q_ ih_1 ih_2 =>
+      unfold replace_var
+      unfold var_set
+      simp
+      exact ⟨ih_1, ih_2⟩
+    case abs_ x_ P_ ih =>
+      unfold replace_var
+      split_ifs
+      case pos c1 =>
+        unfold var_set
+        simp
+        exact ⟨ih, h1⟩
+      case neg c1 =>
+        unfold var_set
+        simp
+        exact ⟨ih, c1⟩
+
+
+theorem replace_var_inverse
+  (M : Term_)
+  (x y : Symbol_)
+  (h1 : y ∉ M.var_set) :
+  replace_var y x (replace_var x y M) = M :=
+  by
+    induction M
     all_goals
       unfold var_set at h1
       simp only [replace_var]
-    case var_ x =>
+    case var_ x_ =>
       split_ifs
       case pos c1 =>
         rw [c1]
@@ -106,13 +142,13 @@ theorem replace_var_inverse
         unfold replace_var
         split_ifs
         rfl
-    case app_ P Q ih_1 ih_2 =>
+    case app_ P_ Q_ ih_1 ih_2 =>
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
       rw [ih_1 h1_left]
       rw [ih_2 h1_right]
-    case abs_ x P ih =>
+    case abs_ x_ P_ ih =>
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
 
@@ -128,50 +164,14 @@ theorem replace_var_inverse
         exact ih h1_left
 
 
-theorem replace_var_not_mem_var_set
-  (u v : Symbol_)
-  (e : Term_)
-  (h1 : ¬ u = v) :
-  u ∉ (replace_var u v e).var_set :=
-  by
-    induction e
-    case var_ x =>
-      unfold replace_var
-      split_ifs
-      case pos c1 =>
-        unfold var_set
-        simp
-        exact h1
-      case neg c1 =>
-        unfold var_set
-        simp
-        exact c1
-    case app_ P Q ih_1 ih_2 =>
-      unfold replace_var
-      unfold var_set
-      simp
-      exact ⟨ih_1, ih_2⟩
-    case abs_ x P ih =>
-      unfold replace_var
-      split_ifs
-      case pos c1 =>
-        unfold var_set
-        simp
-        exact ⟨ih, h1⟩
-      case neg c1 =>
-        unfold var_set
-        simp
-        exact ⟨ih, c1⟩
-
-
 theorem replace_var_free_var_set_sdiff
-  (u v : Symbol_)
-  (e : Term_)
-  (h1 : v ∉ e.var_set) :
-  e.free_var_set \ {u} = (replace_var u v e).free_var_set \ {v} :=
+  (M : Term_)
+  (x y : Symbol_)
+  (h1 : y ∉ M.var_set) :
+  M.free_var_set \ {x} = (replace_var x y M).free_var_set \ {y} :=
   by
-    induction e
-    case var_ x =>
+    induction M
+    case var_ x_ =>
       unfold var_set at h1
       simp at h1
 
@@ -185,20 +185,20 @@ theorem replace_var_free_var_set_sdiff
         unfold free_var_set
         simp only [Finset.sdiff_singleton_eq_erase]
 
-        have s1 : Finset.erase {x} u = ({x} : Finset Symbol_) :=
+        have s1 : Finset.erase {x_} x = ({x_} : Finset Symbol_) :=
         by
           apply Finset.erase_eq_of_not_mem
           simp
           exact c1
         rw [s1]
 
-        have s2 : Finset.erase {x} v = ({x} : Finset Symbol_) :=
+        have s2 : Finset.erase {x_} y = ({x_} : Finset Symbol_) :=
         by
           apply Finset.erase_eq_of_not_mem
           simp
           exact h1
         rw [s2]
-    case app_ P Q ih_1 ih_2 =>
+    case app_ P_ Q_ ih_1 ih_2 =>
       unfold var_set at h1
       simp at h1
       obtain ⟨h1_left, h1_right⟩ := h1
@@ -208,7 +208,7 @@ theorem replace_var_free_var_set_sdiff
       simp only [Finset.union_sdiff_distrib]
       rw [ih_1 h1_left]
       rw [ih_2 h1_right]
-    case abs_ x P ih =>
+    case abs_ x_ P_ ih =>
       unfold var_set at h1
       simp at h1
       obtain ⟨h1_left, _⟩ := h1
