@@ -40,11 +40,11 @@ def Term_.toString : Term_ → String
 
 instance :
   ToString Term_ :=
-  { toString := fun (e : Term_) => e.toString }
+  { toString := fun (M : Term_) => M.toString }
 
 
 /--
-  `is_var e` := True if and only if `e` is a term variable.
+  `is_var M` := True if and only if `M` is a term variable.
 -/
 def Term_.is_var :
   Term_ → Prop
@@ -53,22 +53,22 @@ def Term_.is_var :
 
 
 instance
-  (e : Term_) :
-  Decidable e.is_var :=
+  (M : Term_) :
+  Decidable M.is_var :=
   by
-    cases e
+    cases M
     all_goals
       unfold is_var
       infer_instance
 
 
 lemma is_var_iff_exists_var
-  (e : Term_) :
-  e.is_var ↔ ∃ (x : Symbol_), e = var_ x :=
+  (M : Term_) :
+  M.is_var ↔ ∃ (x : Symbol_), M = var_ x :=
   by
     constructor
     · intro a1
-      cases e
+      cases M
       case var_ x =>
         apply Exists.intro x
         rfl
@@ -83,7 +83,7 @@ lemma is_var_iff_exists_var
 
 
 /--
-  `is_app e` := True if and only if `e` is a term application.
+  `is_app M` := True if and only if `M` is a term application.
 -/
 def Term_.is_app :
   Term_ → Prop
@@ -92,22 +92,22 @@ def Term_.is_app :
 
 
 instance
-  (e : Term_) :
-  Decidable e.is_app :=
+  (M : Term_) :
+  Decidable M.is_app :=
   by
-    cases e
+    cases M
     all_goals
       unfold is_app
       infer_instance
 
 
 lemma is_app_iff_exists_app
-  (e : Term_) :
-  e.is_app ↔∃ (P Q : Term_), e = app_ P Q :=
+  (M : Term_) :
+  M.is_app ↔∃ (P Q : Term_), M = app_ P Q :=
   by
     constructor
     · intro a1
-      cases e
+      cases M
       case app_ P Q =>
         apply Exists.intro P
         apply Exists.intro Q
@@ -123,7 +123,7 @@ lemma is_app_iff_exists_app
 
 
 /--
-  `is_abs e` := True if and only if `e` is a term abstraction.
+  `is_abs M` := True if and only if `M` is a term abstraction.
 -/
 def Term_.is_abs :
   Term_ → Prop
@@ -132,22 +132,22 @@ def Term_.is_abs :
 
 
 instance
-  (e : Term_) :
-  Decidable e.is_abs :=
+  (M : Term_) :
+  Decidable M.is_abs :=
   by
-    cases e
+    cases M
     all_goals
       unfold is_abs
       infer_instance
 
 
 lemma is_abs_iff_exists_abs
-  (e : Term_) :
-  e.is_abs ↔∃ (x : Symbol_) (P : Term_), e = abs_ x P :=
+  (M : Term_) :
+  M.is_abs ↔∃ (x : Symbol_) (P : Term_), M = abs_ x P :=
   by
     constructor
     · intro a1
-      cases e
+      cases M
       case abs_ x P =>
         apply Exists.intro x
         apply Exists.intro P

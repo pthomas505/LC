@@ -10,7 +10,7 @@ open Term_
 
 
 /--
-  `Term_.subterm_set e` := The set of all of the subterms of a term `e`.
+  `Term_.subterm_set M` := The set of all of the subterms of a term `M`.
   [2] Definition 1.3.5
 -/
 def Term_.subterm_set :
@@ -22,34 +22,34 @@ def Term_.subterm_set :
 
 -- [2] reflexivity
 lemma lemma_1_3_6_refl
-  (e : Term_) :
-  e ∈ e.subterm_set :=
+  (M : Term_) :
+  M ∈ M.subterm_set :=
   by
-    cases e
+    cases M
     all_goals
       unfold subterm_set
-    case var_ x =>
+    case var_ x_ =>
       simp
-    case app_ P Q =>
+    case app_ P_ Q_ =>
       simp
-    case abs_ x P =>
+    case abs_ x_ P_ =>
       simp
 
 
 -- [2] transitivity
 lemma lemma_1_3_6_trans
-  (e e' e'' : Term_)
-  (h1 : e ∈ e'.subterm_set)
-  (h2 : e' ∈ e''.subterm_set) :
-  e ∈ e''.subterm_set :=
+  (M M' M'' : Term_)
+  (h1 : M ∈ M'.subterm_set)
+  (h2 : M' ∈ M''.subterm_set) :
+  M ∈ M''.subterm_set :=
   by
-    induction e''
-    case var_ x =>
+    induction M''
+    case var_ x_ =>
       unfold subterm_set at h2
       simp at h2
       rw [h2] at h1
       exact h1
-    case app_ P Q ih_1 ih_2 =>
+    case app_ P_ Q_ ih_1 ih_2 =>
       unfold subterm_set at h2
       simp at h2
 
@@ -71,7 +71,7 @@ lemma lemma_1_3_6_trans
       case inr h2 =>
         rw [h2] at h1
         exact h1
-    case abs_ x P ih =>
+    case abs_ x_ P_ ih =>
       unfold subterm_set at h2
       simp at h2
 
@@ -90,9 +90,9 @@ lemma lemma_1_3_6_trans
   [2] Definition 1.3.8
 -/
 def is_proper_subterm
-  (e e' : Term_) :
+  (M M' : Term_) :
   Prop :=
-  e ∈ e'.subterm_set ∧ ¬ e = e'
+  M ∈ M'.subterm_set ∧ ¬ M = M'
 
 
 #lint
