@@ -424,7 +424,85 @@ lemma lemma_1_2_6_a_right
   (h3 : sub_is_def_v3 (replace_free x N M) y L)
   (h4 : ¬ x = y)
   (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
-  sub_is_def_v3 (replace_free y L M) x (replace_free y L N) := sorry
+  sub_is_def_v3 (replace_free y L M) x (replace_free y L N) :=
+  by
+    induction M
+    case var_ x_ =>
+      simp only [free_var_set] at h5
+      simp at h5
+
+      cases h5
+      case inl h5_left =>
+        simp only [replace_free]
+        split_ifs
+        case pos c1 =>
+          exact lemma_1_2_5_i_a L x (replace_free y L N) h5_left
+        case neg c1 =>
+          exact sub_is_def_v3.var x_ x (replace_free y L N)
+      case inr h5_right =>
+        simp only [replace_free]
+        split_ifs
+        exact sub_is_def_v3.var x_ x (replace_free y L N)
+    case app_ P_ Q_ ih_1 ih_2 =>
+      cases h1
+      case app c1 c2 =>
+        cases h3
+        case app c3 c4 =>
+          simp only [free_var_set] at h5
+          simp at h5
+
+          apply sub_is_def_v3.app
+          · tauto
+          · tauto
+    case abs_ x_ P_ ih =>
+      simp only [free_var_set] at h5
+      simp at h5
+
+      cases h1
+      case abs_1 c1 =>
+        simp only [replace_free]
+        split_ifs
+        case pos c2 =>
+          apply sub_is_def_v3.abs_1
+          exact c1
+        case neg c2 =>
+          apply sub_is_def_v3.abs_1
+          exact c1
+      case abs_2 c1 c2 =>
+        simp only [replace_free] at h3
+        split_ifs at h3
+
+        simp only [replace_free]
+        split_ifs
+        case pos c3 =>
+          apply sub_is_def_v3.abs_2
+          · exact c1
+          · exact c2
+        case neg c3 =>
+          apply sub_is_def_v3.abs_2
+          · exact c1
+          · cases h5
+            case _ h5_left =>
+              apply replace_free_not_mem_either_free_var_set; exact c2; exact h5_left
+            case _ h5_right =>
+              simp only [free_var_set] at h5_right
+              have s1 : y ∉ P_.free_var_set := by tauto
+              have s2 : replace_free y L P_ = P_ := replace_free_not_mem P_ y L s1
+              rw [s2]
+              exact c2
+      case abs_3 c1 c2 c3 =>
+        simp only [replace_free] at h3
+        split_ifs at h3
+
+        simp only [replace_free]
+        split_ifs
+        case pos c4 =>
+          rw [c4]
+          have s1 : replace_free x_ L N = N := replace_free_not_mem N x_ L c2
+          rw [s1]
+          apply sub_is_def_v3.abs_3; exact c1; exact c2; exact c3
+        case neg c4 =>
+          sorry
 
 
 -- [1]

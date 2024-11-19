@@ -170,6 +170,54 @@ lemma replace_free_not_mem_free_var_set
         contradiction
 
 
+lemma replace_free_not_mem_either_free_var_set
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (y : Symbol_)
+  (h1 : y ∉ M.free_var_set)
+  (h2 : y ∉ N.free_var_set) :
+  y ∉ (replace_free x N M).free_var_set :=
+  by
+    induction M
+    all_goals
+      unfold free_var_set at h1
+    case var_ x_ =>
+      simp at h1
+
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        exact h2
+      case neg c1 =>
+        unfold free_var_set
+        simp
+        exact h1
+    case app_ P_ Q_ ih_1 ih_2 =>
+      simp at h1
+
+      unfold replace_free
+      unfold free_var_set
+      simp
+      tauto
+    case abs_ x_ P_ ih =>
+      simp at h1
+
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        unfold free_var_set
+        simp
+        exact h1
+      case neg c1 =>
+        unfold free_var_set
+        simp
+        intro a1
+        apply h1
+        by_contra contra
+        apply ih; exact contra; exact a1
+
+
 lemma replace_free_inverse
   (M : Term_)
   (x y : Symbol_)
