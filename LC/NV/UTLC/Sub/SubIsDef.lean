@@ -272,7 +272,7 @@ lemma lemma_1_2_6_a_right
   (M N L : Term_)
   (x y : Symbol_)
   (h1 : sub_is_def_v3 M x N)
-  (h2 : sub_is_def_v3 N y L)
+  -- (h2 : sub_is_def_v3 N y L)
   (h3 : sub_is_def_v3 (replace_free x N M) y L)
   (h4 : ¬ x = y)
   (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
@@ -346,15 +346,58 @@ lemma lemma_1_2_6_a_right
         simp only [replace_free] at h3
         split_ifs at h3
 
-        simp only [replace_free]
-        split_ifs
-        case pos c4 =>
-          rw [c4]
-          have s1 : replace_free x_ L N = N := replace_free_not_mem N x_ L c2
+        cases h3
+        case abs_1 c4 =>
+          have s1 : replace_free y L (abs_ x_ P_) = abs_ x_ P_ :=
+          by
+            apply replace_free_not_mem (abs_ x_ P_) y L
+            unfold free_var_set
+            simp
+            intro a1
+            exact c4
           rw [s1]
-          apply sub_is_def_v3.abs_3; exact c1; exact c2; exact c3
-        case neg c4 =>
-          sorry
+
+          have s2 : replace_free y L N = N :=
+          by
+            rw [c4]
+            exact replace_free_not_mem N x_ L c2
+          rw [s2]
+
+          apply sub_is_def_v3.abs_3; exact c1; exact c2; exact c3;
+        case abs_2 c4 c5 =>
+          obtain s1 := lemma_1_2_5_ii P_ x N y c3
+          rw [s1] at c5
+          clear s1
+          simp at c5
+          obtain ⟨c5_left, c5_right⟩ := c5
+          have s2 : y ∉ P_.free_var_set := by tauto
+          have s3 : replace_free y L (abs_ x_ P_) = abs_ x_ P_ :=
+          by
+            apply replace_free_not_mem (abs_ x_ P_) y L
+            unfold free_var_set
+            simp
+            intro a1
+            contradiction
+          rw [s3]
+          by_cases c6 : y ∈ N.free_var_set
+          case pos =>
+            apply sub_is_def_v3.abs_2
+            · exact c1
+            · exact c5_right c6
+          case neg =>
+            have s4 : replace_free y L N = N := replace_free_not_mem N y L c6
+            rw [s4]
+            exact sub_is_def_v3.abs_3 x_ P_ x N c1 c2 c3
+        case abs_3 c4 c5 c6 =>
+          simp only [replace_free]
+          split_ifs
+          apply sub_is_def_v3.abs_3
+          · exact c1
+          · exact replace_free_not_mem_either_free_var_set N y L x_ c2 c5
+          · apply ih
+            · exact c3
+            · exact c6
+            · tauto
 
 
 -- [1]
