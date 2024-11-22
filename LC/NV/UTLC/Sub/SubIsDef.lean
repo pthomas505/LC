@@ -563,6 +563,7 @@ lemma lemma_1_2_7_a
             · tauto
 
 
+-- [1]
 lemma lemma_1_2_7_b
   (M : Term_)
   (x y : Symbol_)
