@@ -493,4 +493,74 @@ lemma lemma_1_2_6_b
           tauto
 
 
+-- [1]
+lemma lemma_1_2_7
+  (M : Term_)
+  (x y : Symbol_)
+  (h1 : sub_is_def_v3 M x (var_ y))
+  (h2 : y ∉ M.free_var_set) :
+  sub_is_def_v3 (replace_free x (var_ y) M) y (var_ x) :=
+  by
+    induction M
+    case var_ x_ =>
+      unfold free_var_set at h2
+      simp at h2
+
+      unfold replace_free
+      split_ifs
+      case pos c1 =>
+        apply sub_is_def_v3.var
+      case neg c1 =>
+        apply sub_is_def_v3.var
+    case app_ P_ Q_ ih_1 ih_2 =>
+      cases h1
+      case app c1 c2 =>
+        unfold free_var_set at h2
+        simp at h2
+
+        unfold replace_free
+        apply sub_is_def_v3.app
+        · tauto
+        · tauto
+    case abs_ x_ P_ ih =>
+      unfold free_var_set at h2
+      simp at h2
+
+      simp only [replace_free]
+      split_ifs
+      case pos c1 =>
+        by_cases c2 : y = x
+        case pos =>
+          apply sub_is_def_v3.abs_1
+          rw [c1] at c2
+          exact c2
+        case neg =>
+          rw [c1] at c2
+          have s1 : y ∉ P_.free_var_set := by tauto
+          rw [c1]
+          exact sub_is_def_v3.abs_2 x_ P_ y (var_ x_) c2 s1
+      case neg c1 =>
+        by_cases c2 : y = x_
+        case pos =>
+          rw [c2]
+          exact sub_is_def_v3.abs_1 x_ (replace_free x (var_ x_) P_) x_ (var_ x) rfl
+        case neg =>
+          apply sub_is_def_v3.abs_3
+          · exact c2
+          · unfold free_var_set
+            simp
+            intro contra
+            apply c1
+            rw [contra]
+          · apply ih
+            · cases h1
+              case _ c3 =>
+                contradiction
+              case _ c3 c4 =>
+                exact lemma_1_2_5_i_a P_ x (var_ y) c4
+              case _ c3 c4 c5 =>
+                exact c5
+            · tauto
+
+
 #lint
