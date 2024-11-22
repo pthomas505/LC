@@ -494,7 +494,7 @@ lemma lemma_1_2_6_b
 
 
 -- [1]
-lemma lemma_1_2_7
+lemma lemma_1_2_7_a
   (M : Term_)
   (x y : Symbol_)
   (h1 : sub_is_def_v3 M x (var_ y))
@@ -561,6 +561,34 @@ lemma lemma_1_2_7
               case _ c3 c4 c5 =>
                 exact c5
             · tauto
+
+
+lemma lemma_1_2_7_b
+  (M : Term_)
+  (x y : Symbol_)
+  (h1 : sub_is_def_v3 M x (var_ y))
+  (h2 : y ∉ M.free_var_set) :
+  replace_free y (var_ x) (replace_free x (var_ y) M) = M :=
+  by
+    by_cases c1 : x = y
+    case pos =>
+      rw [c1]
+      simp only [replace_free_id]
+    case neg =>
+      obtain s1 := lemma_1_2_6_b M (var_ y) (var_ x) x y h1 c1
+
+      have s2 : replace_free y (var_ x) M = M := replace_free_not_mem M y (var_ x) h2
+      rw [s2] at s1
+      clear s2
+
+      simp only [replace_free] at s1
+      simp at s1
+
+      rw [replace_free_id] at s1
+
+      apply s1
+      right
+      exact h2
 
 
 #lint
