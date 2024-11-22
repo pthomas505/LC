@@ -404,12 +404,93 @@ lemma lemma_1_2_6_b
   (M N L : Term_)
   (x y : Symbol_)
   (h1 : sub_is_def_v3 M x N)
-  (h2 : sub_is_def_v3 N y L)
-  (h3 : sub_is_def_v3 (replace_free x N M) y L)
-  (h4 : ¬ x = y)
-  (h5 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
+  (h2 : ¬ x = y)
+  (h3 : x ∉ L.free_var_set ∨ y ∉ M.free_var_set) :
   replace_free y L (replace_free x N M) =
-    replace_free x (replace_free y L M) (replace_free y L N) := sorry
+    replace_free x (replace_free y L N) (replace_free y L M) :=
+  by
+    induction M
+    case var_ x_ =>
+      simp only [replace_free]
+      split_ifs
+      case pos c1 c2 =>
+        rw [c1] at h2
+        rw [c2] at h2
+        contradiction
+      case neg c1 c2 =>
+        rw [c1]
+        simp only [replace_free]
+        simp
+      case pos c1 c2 =>
+        simp only [free_var_set] at h3
+        simp at h3
+
+        have s1 : x ∉ L.free_var_set := by tauto
+
+        rw [c2]
+        rw [replace_free]
+        simp
+
+        symm
+        exact replace_free_not_mem L x (replace_free x_ L N) s1
+      case neg c1 c2 =>
+        simp only [replace_free]
+        split_ifs
+        rfl
+    case app_ P Q ih_1 ih_2 =>
+      simp only [free_var_set] at h3
+      simp at h3
+
+      cases h1
+      case _ c1 c2 =>
+        simp only [replace_free]
+        congr 1
+        · apply ih_1
+          · tauto
+          · tauto
+        · apply ih_2
+          · tauto
+          · tauto
+    case abs_ x_ P_ ih =>
+      simp only [replace_free]
+      split_ifs
+      case pos c1 c2 =>
+        simp only [replace_free]
+        split_ifs
+        rfl
+      case neg c1 c2 =>
+        simp only [replace_free]
+        split_ifs
+        rfl
+      case pos c1 c2 =>
+        simp only [replace_free]
+        split_ifs
+        congr 1
+        rw [c2]
+
+        cases h1
+        case _ c3 =>
+          contradiction
+        case _ c3 c4 =>
+          rw [replace_free_not_mem P_ x N c4]
+          rw [replace_free_not_mem P_ x (replace_free x_ L N) c4]
+        case _ c3 c4 c5 =>
+          rw [replace_free_not_mem N x_ L c4]
+      case neg c1 c2 =>
+        simp only [replace_free]
+        split_ifs
+        congr 1
+        apply ih
+        · cases h1
+          case _ c3 =>
+            contradiction
+          case _ c3 c4 =>
+            exact lemma_1_2_5_i_a P_ x N c4
+          case _ c3 c4 c5 =>
+            exact c5
+        · simp only [free_var_set] at h3
+          simp at h3
+          tauto
 
 
 #lint
