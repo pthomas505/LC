@@ -175,7 +175,23 @@ example
             contradiction
         case neg c1 =>
           simp at c1
-          sorry
+          specialize c1 x
+          by_cases c2 : x_ = x
+          case pos =>
+            rw [c2]
+            simp only [Function.updateITE_idem]
+            simp only [Function.updateITE_same]
+            exact sub_id P_ c
+          case neg =>
+            have s1 : Function.updateITE (Function.updateITE (fun x ↦ var_ x) x N) x_ (var_ x_) = Function.updateITE (fun x ↦ var_ x) x N :=
+            by
+              apply Function.updateITE_same
+              simp only [Function.updateITE]
+              split_ifs
+              rfl
+            rw [s1]
+            apply ih
+            tauto
 
 
 -------------------------------------------------------------------------------
