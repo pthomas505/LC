@@ -18,73 +18,160 @@ def sub
   (c : Char) :
   Term_ → Term_
   | var_ x => sigma x
-  | app_ e1 e2 => app_ (sub sigma c e1) (sub sigma c e2)
-  | abs_ x e =>
+  | app_ P Q => app_ (sub sigma c P) (sub sigma c Q)
+  | abs_ x P =>
     let x' : Symbol_ :=
-      if ∃ (y : Symbol_), y ∈ e.free_var_set \ {x} ∧ x ∈ (sigma y).free_var_set
-      then fresh x c ((sub (Function.updateITE sigma x (var_ x)) c e).free_var_set)
+      if ∃ (y : Symbol_), y ∈ P.free_var_set \ {x} ∧ x ∈ (sigma y).free_var_set
+      then fresh x c ((sub (Function.updateITE sigma x (var_ x)) c P).free_var_set)
       else x
-    abs_ x' (sub (Function.updateITE sigma x (var_ x')) c e)
-
+    abs_ x' (sub (Function.updateITE sigma x (var_ x')) c P)
 
 -- v -> t in e
 def sub_single
   (v : Symbol_)
   (t : Term_)
-  (e : Term_) :
+  (e : Term_)
+  (c : Char) :
   Term_ :=
   let sigma := Function.updateITE (fun x => var_ x) v t
-  sub sigma '+' e
+  sub sigma c e
 
 
 -- v -> t in e
 def sub_var
   (v t : Symbol_)
-  (e : Term_) :
+  (e : Term_)
+  (c : Char) :
   Term_ :=
-  sub_single v (var_ t) e
+  sub_single v (var_ t) e c
 
 
-#eval sub_var "x" "y" (abs_ "y" (var_ "x"))
+#eval sub_var "x" "y" (abs_ "y" (var_ "x")) '+'
 
 
 -------------------------------------------------------------------------------
 
-example
-  (x y : Symbol_)
-  (N P : Term_) :
-  (sub_single x N (abs_ x P)) = abs_ x P :=
+
+lemma sub_id
+  (M : Term_)
+  (c : Char) :
+  sub (fun x ↦ var_ x) c M = M :=
   by
-    unfold sub_single
-    simp
-    unfold Function.updateITE
-    simp
-    unfold sub
-    split_ifs
-    case pos c1 =>
-      obtain ⟨y', c1_left, c1_right⟩ := c1
-      simp at c1_left
-      obtain ⟨c1_left_left, c1_left_right⟩ := c1_left
-      split_ifs at c1_right
-      simp only [Term_.free_var_set] at c1_right
-      simp at c1_right
-      rw [c1_right] at c1_left_right
-      contradiction
-    case neg c1 =>
-      simp at c1
+    induction M
+    case var_ x_ =>
+      simp only [sub]
+    case app_ P_ Q_ ih_1 ih_2 =>
+      simp only [sub]
+      rw [ih_1]
+      rw [ih_2]
+    case abs_ x_ P_ ih =>
+      simp only [sub]
       simp
-      induction P
-      case var_ x' =>
-        unfold sub
-        unfold Function.updateITE
-        simp
-        split_ifs
-        case pos c2 =>
-          rw [c2]
-        case neg c2 =>
-          rfl
-      all_goals
-        sorry
+      constructor
+      · intro x a1 a2 a3
+        unfold free_var_set at a3
+        simp at a3
+        rw [a3] at a2
+        contradiction
+      · split_ifs
+        case pos c1 =>
+          simp at c1
+          obtain ⟨y, ⟨c1_left_left, c1_left_right⟩, c1_right⟩ := c1
+          unfold free_var_set at c1_right
+          simp at c1_right
+          rw [c1_right] at c1_left_right
+          contradiction
+        case neg c1 =>
+          have s1 : Function.updateITE (fun x ↦ var_ x) x_ (var_ x_) = (fun x ↦ var_ x) :=
+          by
+            ext x
+            unfold Function.updateITE
+            split_ifs
+            case pos c2 =>
+              rw [c2]
+            case neg c2 =>
+              simp
+          rw [s1]
+          exact ih
+
+
+example
+  (x : Symbol_)
+  (N : Term_)
+  (M : Term_)
+  (c : Char)
+  (h1 : x ∉ M.free_var_set) :
+  sub_single x N M c = M :=
+  by
+    induction M
+    case var_ x_ =>
+      unfold free_var_set at h1
+      simp at h1
+
+      simp only [sub_single]
+      simp only [sub]
+      simp only [Function.updateITE]
+      split_ifs
+      case pos c1 =>
+        rw [c1] at h1
+        contradiction
+      case neg c1 =>
+        rfl
+    case app_ P_ Q_ ih_1 ih_2 =>
+      simp only [sub_single] at ih_1
+
+      unfold free_var_set at h1
+      simp at h1
+
+
+      simp only [sub_single]
+      simp only [sub]
+      congr
+      · tauto
+      · tauto
+    case abs_ x_ P_ ih =>
+      simp only [sub_single] at ih
+
+      unfold free_var_set at h1
+      simp at h1
+
+      simp only [sub_single]
+      simp only [sub]
+      simp
+      constructor
+      · intro z a1 a2 a3
+        simp only [Function.updateITE] at a3
+        split_ifs at a3
+        case pos c1 =>
+          rw [c1] at a1
+          rw [c1] at a2
+          specialize h1 a1
+          contradiction
+        case neg c1 =>
+          simp only [free_var_set] at a3
+          simp at a3
+          rw [a3] at a2
+          contradiction
+      · split_ifs
+        case pos c1 =>
+          simp at c1
+          simp only [Function.updateITE] at c1
+          obtain ⟨y, ⟨c1_left_left, c1_left_right⟩, c1_right⟩ := c1
+          split_ifs at c1_right
+          case pos c2 =>
+            rw [c2] at c1_left_left
+            specialize h1 c1_left_left
+            rw [c2] at c1_left_right
+            contradiction
+          case neg c2 =>
+            unfold free_var_set at c1_right
+            simp at c1_right
+            rw [c1_right] at c1_left_right
+            contradiction
+        case neg c1 =>
+          simp at c1
+          simp only [Function.updateITE] at c1
+          sorry
 
 
 -------------------------------------------------------------------------------
