@@ -11,7 +11,7 @@ open Term_
 
 
 /--
-  sub sigma c e := The simultaneous replacement of each free occurrence of any variable v in the expression e by sigma v. The character c is used to generate fresh binding variables as needed to avoid free variable capture.
+  `sub sigma c M` := The simultaneous replacement of each free occurrence of any variable `x` in the term `M` by `sigma x`. The character `c` is used to generate fresh binding variables as needed to avoid free variable capture.
 -/
 def sub
   (sigma : Symbol_ → Term_)
