@@ -26,24 +26,25 @@ def sub
       else x
     abs_ x' (sub (Function.updateITE sigma x (var_ x')) c P)
 
--- v -> t in e
+
+-- x -> N in M
 def sub_single
-  (v : Symbol_)
-  (t : Term_)
-  (e : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (M : Term_)
   (c : Char) :
   Term_ :=
-  let sigma := Function.updateITE (fun x => var_ x) v t
-  sub sigma c e
+  let sigma := Function.updateITE (fun x => var_ x) x N
+  sub sigma c M
 
 
--- v -> t in e
+-- x -> y in M
 def sub_var
-  (v t : Symbol_)
-  (e : Term_)
+  (x y : Symbol_)
+  (M : Term_)
   (c : Char) :
   Term_ :=
-  sub_single v (var_ t) e c
+  sub_single x (var_ y) M c
 
 
 #eval sub_var "x" "y" (abs_ "y" (var_ "x")) '+'
@@ -170,7 +171,6 @@ example
             contradiction
         case neg c1 =>
           simp at c1
-          simp only [Function.updateITE] at c1
           sorry
 
 
