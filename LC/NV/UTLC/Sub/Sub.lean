@@ -47,7 +47,11 @@ def sub_var
   sub_single x (var_ y) M c
 
 
+#eval sub_var "x" "y" (abs_ "x" (var_ "x")) '+'
+#eval sub_var "x" "z" (abs_ "y" (var_ "x")) '+'
 #eval sub_var "x" "y" (abs_ "y" (var_ "x")) '+'
+#eval sub_var "x" "z" (var_ "y") '+'
+#eval sub_var "x" "z" (var_ "x") '+'
 
 
 -------------------------------------------------------------------------------
