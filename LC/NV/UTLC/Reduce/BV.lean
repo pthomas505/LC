@@ -165,8 +165,8 @@ def iterate_bv_small_step
   else e
 
 
-#eval iterate_bv_small_step sub_single 3 (app_ not_ true_) = false_
-#eval iterate_bv_small_step sub_single 3 (app_ not_ false_) = true_
+#eval iterate_bv_small_step (fun x y z => sub_single x y z '+') 3 (app_ not_ true_) = false_
+#eval iterate_bv_small_step (fun x y z => sub_single x y z '+') 3 (app_ not_ false_) = true_
 
 
 inductive is_bv_big_step
