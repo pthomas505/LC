@@ -1,6 +1,7 @@
 import MathlibExtra.Fresh
 import MathlibExtra.FunctionUpdateITE
 
+import LC.NV.UTLC.Sub.SubIsDef
 import LC.NV.UTLC.Sub.ReplaceFree
 
 
@@ -27,7 +28,9 @@ def sub
     abs_ x' (sub (Function.updateITE sigma x (var_ x')) c P)
 
 
--- x -> N in M
+/--
+  `sub_single x N M c` := `x -> N` in `M`
+-/
 def sub_single
   (x : Symbol_)
   (N : Term_)
@@ -38,7 +41,9 @@ def sub_single
   sub sigma c M
 
 
--- x -> y in M
+/--
+  `sub_var x y M c` := `x -> y` in `M`
+-/
 def sub_var
   (x y : Symbol_)
   (M : Term_)
@@ -100,7 +105,7 @@ lemma sub_id
           exact ih
 
 
-example
+lemma sub_single_not_mem
   (x : Symbol_)
   (N : Term_)
   (M : Term_)
@@ -192,6 +197,122 @@ example
             rw [s1]
             apply ih
             tauto
+
+
+theorem extracted_1
+  (c : Char)
+  (y : Symbol_)
+  (P : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (h1 : ¬ x = y)
+  (h2 : y ∉ N.free_var_set) :
+  sub_single x N (abs_ y P) c = abs_ y (sub_single x N P c) :=
+  by
+    simp only [sub_single]
+    simp only [sub]
+    simp
+    constructor
+    · intro z a1 a2 a3
+      simp only [Function.updateITE] at a3
+      split_ifs at a3
+      case pos c1 =>
+        contradiction
+      case neg c1 =>
+        unfold free_var_set at a3
+        simp at a3
+        tauto
+    · split_ifs
+      case pos c1 =>
+        simp at c1
+        obtain ⟨z, ⟨c1_left_left, c1_left_right⟩, c1_right⟩ := c1
+        simp only [Function.updateITE] at c1_right
+        split_ifs at c1_right
+        case pos c2 =>
+          contradiction
+        case neg c2 =>
+          unfold free_var_set at c1_right
+          simp at c1_right
+          rw [c1_right] at c1_left_right
+          contradiction
+      case neg c1 =>
+        rw [Function.updateITE_same]
+        simp only [Function.updateITE]
+        split_ifs
+        case pos c2 =>
+          rw [c2] at h1
+          contradiction
+        case neg c2 =>
+          rfl
+
+
+example
+  (M : Term_)
+  (x : Symbol_)
+  (N : Term_)
+  (c : Char)
+  (h1 : sub_is_def_v3 M x N) :
+  sub_single x N M c = replace_free x N M :=
+  by
+    induction h1
+    case var y_ x_ N_ =>
+      simp only [sub_single]
+      simp only [sub]
+      simp only [Function.updateITE]
+      split_ifs
+      case pos c1 =>
+        rw [c1]
+        simp only [replace_free]
+        simp
+      case neg c1 =>
+        simp only [replace_free]
+        split_ifs
+        case pos c2 =>
+          rw [c2] at c1
+          contradiction
+        case neg c2 =>
+          rfl
+    case app P_ Q_ x_ N_ ih_1 ih_2 ih_3 ih_4 =>
+      simp only [sub_single] at *
+      simp only [sub] at *
+      simp only [replace_free]
+      rw [ih_3]
+      rw [ih_4]
+    case abs_1 y_ P_ x_ N_ ih =>
+      rw [ih]
+
+      have s1 : sub_single y_ N_ (abs_ y_ P_) c = abs_ y_ P_ :=
+      by
+        apply sub_single_not_mem
+        unfold free_var_set
+        simp
+
+      rw [s1]
+
+      rw [replace_free_not_mem]
+      unfold free_var_set
+      simp
+    case abs_2 y_ P_ x_ N_ ih_1 ih_2 =>
+      have s1 : sub_single x_ N_ (abs_ y_ P_) c = abs_ y_ P_ :=
+      by
+        apply sub_single_not_mem
+        unfold free_var_set
+        simp
+        intro a1
+        contradiction
+
+      rw [s1]
+
+      rw [replace_free_not_mem]
+      unfold free_var_set
+      simp
+      intro a1
+      contradiction
+    case abs_3 y_ P_ x_ N_ ih_1 ih_2 ih_3 ih_4 =>
+      simp only [replace_free]
+      split_ifs
+      rw [← ih_4]
+      apply extracted_1; exact ih_1; exact ih_2
 
 
 -------------------------------------------------------------------------------
